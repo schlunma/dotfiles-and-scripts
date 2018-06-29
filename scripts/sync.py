@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# Easy SSH synchronization
 # Copyright (c) 2018 Manuel Schlund <schlunma@gmail.com>
 # Licensed under the GNU General Public License 3 (or later).
 
@@ -20,6 +21,33 @@ All options can be found by calling::
 
     $ python sync.py --help
 
+Notes
+-----
+The configuration file should have the ini format, e.g.::
+
+    [ALIASES]
+    myhost = host1
+
+    [host1]
+    file1 = path/to/file1
+    file2 = path/to/file2
+
+    [host2]
+    _PATH = ~/path/to/somewhere/
+    file2 = another/path/to/file2
+
+    [host3]
+    file1 = yet/another/path/to/file1
+
+All listed (non-default) sections are hostnames of the different machines.
+If no "_PATH" option is given the particular hostname has to be defined in
+the ssh configuration file (~/.ssh/config). The paths of all files or
+directories have to be given relative to the home directory of the particular
+machine or, if given, relative to the _PATH option.
+
+The "ALIASES" section offers the possibility to asign aliases for the
+different hosts.
+
 """
 
 
@@ -33,7 +61,7 @@ import time
 
 
 class Sync(object):
-    """Main synchronization class."""
+    """Synchronization class."""
 
     # Static member variables
     _CONFIGFILE = '~/.sync.conf'
@@ -46,22 +74,27 @@ class Sync(object):
     _EXCLUDE = '--exclude="*.swp" '
     _PATH = '_PATH'
     _ALIASES = 'ALIASES'
+    _NAME = 'Easy SSH synchronization'
+    _COPYRIGHT = 'Copyright (c) 2018 Manuel Schlund <schlunma@gmail.com>'
+    _DELIMITER = 50 * '-'
 
     def __init__(self):
-        """Initialize class instance."""
-        self._parse_args()
-        self._setup_logger()
-        self._read_config()
-        self._get_hosts()
+        """Initialize member variables."""
+        self.args = None
+        self.config = configparser.ConfigParser()
+        self.parser = argparse.ArgumentParser(
+            description=Sync._NAME + ', ' + Sync._COPYRIGHT)
+        self.this_host = None
+        self.logger = logging.getLogger()
+        self.sync_command = ''
+        self.target_hosts = []
 
     def _get_hosts(self):
         """Get correct host names (according to the configuration file)."""
         all_hosts = [elem for elem in self.config.sections() if
                      elem != Sync._ALIASES]
         other_hosts = []
-        self.target_hosts = []
         myhost = socket.gethostname()
-        self.this_host = None
         for host in all_hosts:
             if host in myhost:
                 self.this_host = host
@@ -103,8 +136,6 @@ class Sync(object):
 
     def _parse_args(self):
         """Parse command line arguments."""
-        self.parser = argparse.ArgumentParser(
-            description="Synchronize files between different machines ")
         self.parser.add_argument(
             'targets', type=str, nargs='+',
             help="The target machines, 'all': perform all possible operations")
@@ -148,28 +179,26 @@ class Sync(object):
         if self.args.delete:
             self.sync_command += ' --delete'
 
-    def _read_config(self):
-        """Get ConfigParser instance of the configuration file."""
-        # Read configuration file
-        self.config = configparser.ConfigParser()
-        if not os.path.isfile(self.args.configfile):
-            logging.error("Configuraton file '%s' does not exist",
-                          self.args.configfile)
-            exit(1)
-        self.config.read(self.args.configfile)
-        logging.debug("Successfully read configuration file '%s'",
-                      self.args.configfile)
+    def _print_welcome(self):
+        """Print welcome message."""
+        logging.info(Sync._DELIMITER)
+        logging.info(Sync._NAME)
+        logging.info(Sync._COPYRIGHT)
+        logging.info("This program comes with ABSOLUTELY NO WARRANTY; for "
+                     "details type `python sync.py --help`")
+        logging.info("This is free software, and you are welcome to "
+                     "redistribute it under certain conditions (see GNU "
+                     "General Public License, Version 3 or later)")
+        logging.info(Sync._DELIMITER)
+        logging.debug("Started synchronization script")
 
-        # Process possible aliases
-        for (i, old_host) in enumerate(self.args.targets):
-            if self.config.has_option(Sync._ALIASES, old_host):
-                new_host = self.config.get(Sync._ALIASES, old_host)
-                self.args.targets[i] = new_host
-                logging.info("Aliased '%s' to '%s'", old_host, new_host)
+        # Warn if user selected --delete option
+        if self.args.delete:
+            logging.warning("--delete option may lead to loss of data")
+            time.sleep(2.0)
 
     def _setup_logger(self):
         """Setup the logging functionality."""
-        self.logger = logging.getLogger()
         if self.args.verbose:
             self.logger.setLevel(logging.DEBUG)
         else:
@@ -188,14 +217,29 @@ class Sync(object):
             console_log_handler = logging.StreamHandler()
             console_log_handler.setFormatter(Sync._LOG_FORMATTER)
             self.logger.addHandler(console_log_handler)
-        logging.info(50*"-")
-        logging.debug("Started synchronization script")
 
-    def _log_sync(self, out_debug, src, dest):
+    def _read_config(self):
+        """Get ConfigParser instance of the configuration file."""
+        # Read configuration file
+        if not os.path.isfile(self.args.configfile):
+            logging.error("Configuraton file '%s' does not exist",
+                          self.args.configfile)
+            exit(1)
+        self.config.read(self.args.configfile)
+        logging.debug("Successfully read configuration file '%s'",
+                      self.args.configfile)
+
+        # Process possible aliases
+        for (i, old_host) in enumerate(self.args.targets):
+            if self.config.has_option(Sync._ALIASES, old_host):
+                new_host = self.config.get(Sync._ALIASES, old_host)
+                self.args.targets[i] = new_host
+                logging.info("Aliased '%s' to '%s'", old_host, new_host)
+
+    def _log_sync(self, out, src, dest):
         """Log the actual synchronization process."""
-        out_info_list = []
-        info_list = out_debug.split('\n')[1:]
-        for info in info_list:
+        info_list = []
+        for info in out.split('\n')[1:]:
             # Arbitrary information
             if (any(['\r' in info,
                      info == '',
@@ -208,31 +252,30 @@ class Sync(object):
             elif 'created directory' in info:
                 info = info.replace("created directory ",
                                     "Created directory '") + "'"
-                out_info_list.append('    ' + info)
+                info_list.append('    ' + info)
 
             # File deleted
             elif info.startswith('deleting'):
                 info = info.replace('deleting ', '', 1)
                 d_str = (dest+info if dest.endswith('/') else dest)
                 if self.args.dry_run:
-                    out_info = "    Would delete "
+                    prefix = "    Would delete "
                 else:
-                    out_info = "    Deleted "
-                out_info_list.append(out_info + "'{}'".format(d_str))
+                    prefix = "    Deleted "
+                info_list.append(prefix + "'{}'".format(d_str))
 
             # File moved
             else:
                 s_str = (src+info if src.endswith('/') else src)
                 d_str = (dest+info if dest.endswith('/') else dest)
                 if self.args.dry_run:
-                    out_info = "    Would move "
+                    prefix = "    Would move "
                 else:
-                    out_info = "    Successfully moved "
-                out_info_list.append(out_info +
-                                     "'{}' to '{}'".format(s_str, d_str))
-        return list(set(out_info_list))
+                    prefix = "    Successfully moved "
+                info_list.append(prefix + "'{}' to '{}'".format(s_str, d_str))
+        return list(set(info_list))
 
-    def _perform_sync_command(self, element, direction, target_host):
+    def _sync_command(self, element, direction, target_host):
         """Perform synchronization command."""
         # Get _PATH options if available
         if self.config.has_option(target_host, Sync._PATH):
@@ -261,13 +304,13 @@ class Sync(object):
         comm = subprocess.Popen(command_str, shell=True,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE)
-        out, err = comm.communicate()
+        (out, err) = comm.communicate()
         out = out.decode('utf-8')
         err = err.decode('utf-8')
         return (src, dest, out, err)
 
-    def _perform_sync(self, target_host, direction):
-        """Perform actual synchronization process."""
+    def _process_host(self, target_host, direction):
+        """Perform synchronization to host."""
         # Get direction
         prefix = 'Upload' if direction == 'up' else 'Download'
 
@@ -287,16 +330,16 @@ class Sync(object):
             if element == Sync._PATH:
                 continue
             if element in elements_target:
-                (src, dest, out_debug, err) = self._perform_sync_command(
-                    element, direction, target_host)
-                out_info_list = self._log_sync(out_debug, src, dest)
+                (src, dest, out, err) = self._sync_command(element, direction,
+                                                           target_host)
+                info_list = self._log_sync(out, src, dest)
 
                 # Log operations
-                if out_debug:
-                    logging.debug(out_debug)
-                if out_info_list:
-                    for out_info in out_info_list:
-                        logging.info(out_info)
+                if out:
+                    logging.debug(out)
+                if info_list:
+                    for info in info_list:
+                        logging.info(info)
                 if ('Connection refused' in err or
                         'Could not resolve hostname' in err):
                     logging.error("   %s: cannot connect to host '%s'", prefix,
@@ -308,20 +351,14 @@ class Sync(object):
 
         return successful
 
-    def sync(self):
+    def _perform_sync(self):
         """Perform synchronization process."""
-        # Warn if user selected --delete option
-        if self.args.delete:
-            logging.warning("--delete option may lead to loss of data")
-            time.sleep(2.0)
-
         # Perform pre-command
-        command_str = Sync._PRE_COMMAND
         logging.debug("Performing pre-command: '%s'", Sync._PRE_COMMAND)
-        pre_comm = subprocess.Popen(command_str, shell=True,
+        pre_comm = subprocess.Popen(Sync._PRE_COMMAND, shell=True,
                                     stdout=subprocess.PIPE,
                                     stderr=subprocess.PIPE)
-        out, err = pre_comm.communicate()
+        (out, err) = pre_comm.communicate()
         out = out.decode('utf-8')
         err = err.decode('utf-8')
         if out:
@@ -330,7 +367,7 @@ class Sync(object):
             logging.error(err.strip('\n'))
         logging.info("")
 
-        # Sync direction
+        # Get synchronization direction
         if self.args.up == self.args.down:
             perform_up = True
             perform_down = True
@@ -344,39 +381,47 @@ class Sync(object):
                           self.this_host, target_host)
 
             # Sync
-            succ_up = True
-            succ_down = True
+            success_up = True
+            success_down = True
             if perform_up:
                 logging.info("Started upload '%s' --> '%s'", self.this_host,
                              target_host)
-                succ_up = self._perform_sync(target_host, 'up')
+                success_up = self._process_host(target_host, 'up')
             if perform_down:
                 logging.info("Started download '%s' --> '%s'", target_host,
                              self.this_host)
-                succ_down = self._perform_sync(target_host, 'down')
-            successful = (succ_up and succ_down)
+                success_down = self._process_host(target_host, 'down')
+            successful = (success_up and success_down)
 
             # Log
-            info = "Successfully simulated" if self.args.dry_run else \
-                   "Simulated"
-            warn = "Simulated" if self.args.dry_run else "Completed"
+            prefix = "Simulated" if self.args.dry_run else "Completed"
             if successful:
                 logging.info("%s synchronization between '%s' and '%s'",
-                             info, self.this_host, target_host)
+                             prefix, self.this_host, target_host)
             else:
                 logging.warning("%s synchronization between '%s' and '%s' with"
-                                "error(s)", warn, self.this_host, target_host)
+                                "error(s)", prefix, self.this_host,
+                                target_host)
             logging.info("")
 
         logging.debug("Finished synchronization script")
-        logging.info("%s\n", 50 * "-")
+        logging.info("%s\n", Sync._DELIMITER)
 
     def print_help(self):
         """Print help messages."""
         self.parser.print_help()
 
+    def run(self):
+        """Start synchronization procedure."""
+        self._parse_args()
+        self._setup_logger()
+        self._print_welcome()
+        self._read_config()
+        self._get_hosts()
+        self._perform_sync()
+
 
 # Call script directly
 if __name__ == '__main__':
     SYNC_INSTANCE = Sync()
-    SYNC_INSTANCE.sync()
+    SYNC_INSTANCE.run()
