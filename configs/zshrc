@@ -1,0 +1,107 @@
+###############################################################################
+# Configuration file for ZSH
+#
+# Copyright (c) 2018 Manuel Schlund <schlunma@gmail.com>
+# Licensed under the GNU General Public License v3.0 (or later).
+###############################################################################
+
+
+
+###############################################################################
+# Do not load this file for non-interactive shells
+###############################################################################
+[[ $- == *i* ]] || return
+###############################################################################
+
+
+
+###############################################################################
+# Lines configured by zsh-newuser-install
+###############################################################################
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+setopt appendhistory autocd beep nomatch notify
+unsetopt extendedglob
+bindkey -v
+###############################################################################
+
+
+
+###############################################################################
+# Lines configured by compinstall
+###############################################################################
+zstyle :compinstall filename "$HOME/.zshrc"
+autoload -Uz compinit
+compinit
+###############################################################################
+
+
+
+###############################################################################
+# Basic settings
+###############################################################################
+KEYTIMEOUT=1                            # Timeout in ZLE mode
+autoload -U compinit && compinit        # Autocomplete
+zstyle ':completion:*' menu select
+###############################################################################
+
+
+
+###############################################################################
+# Colors
+###############################################################################
+autoload -Uz colors && colors
+PROMPT="%{$fg_bold[white]%}%*%{$reset_color%} \
+%{$fg_bold[red]%}%n%{$reset_color%}%{$fg[white]%}@\
+%{$reset_color%}%{$fg_bold[cyan]%}%m %{$fg_bold[yellow]%}%~ \
+"$'\n'"       > %{$reset_color%}"
+zle_highlight=(default:fg=green,bold)
+###############################################################################
+
+
+
+###############################################################################
+# Keybindings (vi mode)
+###############################################################################
+bindkey '^P'    up-history
+bindkey '^N'    down-history
+bindkey '^?'    backward-delete-char
+bindkey '^h'    backward-delete-char
+bindkey '^w'    backward-kill-word
+bindkey '^r'    history-incremental-search-backward
+bindkey '^[[3~' delete-char
+bindkey '^[[H'  beginning-of-line
+bindkey '^[[1~' beginning-of-line
+bindkey '^[[F'  end-of-line
+bindkey '^[[4~' end-of-line
+###############################################################################
+
+
+
+###############################################################################
+# Aliases
+###############################################################################
+alias cd..='cd ..'
+alias ll='ls -l'
+alias la='ls -A'
+alias l='ls -CF'
+alias sq='squeue -l -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M \
+%.12l %.6D  %R"'
+if command -v 'checkssh' &>/dev/null; then
+    alias git='checkssh; git'
+    alias rsync='checkssh; rsync -aP'
+    alias ssh='checkssh 1; ssh'
+else
+    alias rsync='rsync -aP'
+fi
+###############################################################################
+
+
+
+###############################################################################
+# Export Anaconda PATH (due to bug not possible in .zprofile or .zshenv)
+###############################################################################
+ANACONDA='anaconda3/bin'
+[[ ":$PATH:" =~ ":$HOME/$ANACONDA:" ]] || export PATH="$HOME/$ANACONDA:$PATH"
+###############################################################################

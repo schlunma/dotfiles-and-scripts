@@ -1,0 +1,176 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Configuration file for VIM
+"
+" Copyright (c) 2018 Manuel Schlund <schlunma@gmail.com>
+" Licensed under the GNU General Public License v3.0 (or later).
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Setup Vundle
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+
+" Load plugins
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'kien/ctrlp.vim'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'morhetz/gruvbox'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'tmhedberg/SimpylFold'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+Plugin 'tpope/vim-surround'
+if has('python3')
+    Plugin 'davidhalter/jedi-vim'
+endif
+call vundle#end()
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Basic settings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+filetype plugin indent on   " Smarter indentation based on filetype
+syntax enable               " Enable syntax highlighting
+let mapleader=' '           " Set <leader> key to <space>
+set encoding=utf-8          " Use utf-8 encoding
+set shell=zsh               " Support zsh shell
+set expandtab               " Tabs = spaces
+set tabstop=4               " Tab length = 4 spaces
+set shiftwidth=4            " Determines range of <<, >> and ==
+set softtabstop=4           " Tab = 4 spaces
+set colorcolumn=80          " Highlight 80 character boundary
+set fileformat=unix         " Use unix fileformat
+set number                  " Show line numbers
+set hlsearch                " Highlight search results
+set splitbelow              " Vertical split: below current window
+set splitright              " Horizontal split: right of current window
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin settings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NERDTree
+augroup OpenNERDTree
+    autocmd!
+    autocmd VimEnter * NERDTree
+    autocmd VimEnter * wincmd l
+augroup END
+autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTree') &&
+    \ b:NERDTree.isTabTree()) | q | endif
+
+" Syntastic
+autocmd VimEnter * silent! SyntasticToggleMode
+nnoremap <leader>s :w <CR> :SyntasticCheck <CR>
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_auto_loc_list=1
+
+" Gruvbox
+colorscheme gruvbox
+let g:gruvbox_contrast_dark='hard'
+set t_Co=256
+set background=dark
+
+" NERDCommenter
+let g:NERDSpaceDelims=1
+let g:NERDDefaultAlign='left'
+let g:NERDCommentEmptyLines=1
+
+" SimplyFold
+let g:SimpylFold_docstring_preview=1
+set foldmethod=indent
+set foldnestmax=2
+set foldlevel=2
+
+" Snippets
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+
+" Jedi-vim
+let g:jedi#use_splits_not_buffers="right"
+let g:jedi#show_call_signatures="1"
+let g:jedi#popup_select_first=0
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Advanced settings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Colors
+highlight ExtraWhitespace ctermbg=Red
+highlight Pmenu ctermbg=Black ctermfg=White
+highlight PmenuSel ctermbg=22 ctermfg=White
+highlight StatusLine ctermfg=22
+
+" Highlight ncl syntax, tabs and trailing whitespace
+autocmd BufRead,BufNewFile *.ncl set filetype=ncl
+autocmd! Syntax newlang source $VIM/ncl.vim
+autocmd VimEnter,WinEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+set list
+set listchars=tab:>-
+
+" Statusbar
+set laststatus=2
+set statusline+=\ %n\                           " Buffer number
+set statusline+=%{&ff}                          " File format
+set statusline+=%y                              " File type
+set statusline+=\ %<%F                          " Full path
+set statusline+=%m                              " Modified flag
+set statusline+=%=                              " Right aligned
+set statusline+=%{FugitiveStatusline()}         " Git plugin
+set statusline+=\ %5l                           " Current line
+set statusline+=/%L                             " Total lines
+set statusline+=%4v\                            " Virtual column number
+set statusline+=0x%04B\                         " Character under cursor
+set statusline+=%#warningmsg#                   " Syntastic plugin
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Key mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Map <ECS> key to jk or kj combination
+inoremap jk <Esc>
+inoremap kj <Esc>
+
+" Replace visual selection by <C-r>
+vnoremap <C-R> "hy:%s/<C-R>h//gc<left><left><left>
+
+" Stop search highlighting
+nnoremap <silent> , :nohlsearch<Bar>:echo<CR>
+
+" Remove trailing whitespace
+nnoremap <silent> <leader>t :%s/\v\s+$//<CR>:nohlsearch<Bar>:echo<CR>
+
+" Easier split navigations
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+nnoremap <C-I> <C-W>1W
+
+" Easy sort
+vnoremap <silent> <leader>s :sort i<CR>
+nnoremap <silent> <leader>p Vip:sort i<CR>
+
+" Add license
+nnoremap <leader>lg :read $HOME/.vim/templates/GPLv3.rst<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
