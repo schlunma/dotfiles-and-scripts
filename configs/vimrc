@@ -74,7 +74,6 @@ autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTree') &&
 
 " Syntastic
 autocmd VimEnter * silent! SyntasticToggleMode
-nnoremap <leader>s :w <CR> :SyntasticCheck <CR>
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_auto_loc_list=1
 
@@ -147,18 +146,9 @@ set statusline+=%*
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Map <ECS> key to jk or kj combination
+" Map <Esc> key to jk or kj combination
 inoremap jk <Esc>
 inoremap kj <Esc>
-
-" Replace visual selection by <C-r>
-vnoremap <C-R> "hy:%s/<C-R>h//gc<left><left><left>
-
-" Stop search highlighting
-nnoremap <silent> , :nohlsearch<Bar>:echo<CR>
-
-" Remove trailing whitespace
-nnoremap <silent> <leader>t :%s/\v\s+$//<CR>:nohlsearch<Bar>:echo<CR>
 
 " Easier split navigations
 nnoremap <C-J> <C-W><C-J>
@@ -167,10 +157,22 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 nnoremap <C-I> <C-W>1W
 
+" Stop search highlighting
+nnoremap <silent> , :nohlsearch<Bar>:echo<CR>
+
+" Replace visual selection by <C-r>
+vnoremap <C-R> "hy:%s/<C-R>h//gc<left><left><left>
+
+" Remove trailing whitespace
+nnoremap <silent> <leader>t :%s/\v\s+$//<CR>:nohlsearch<Bar>:echo<CR>
+
 " Easy sort
 vnoremap <silent> <leader>s :sort i<CR>
 nnoremap <silent> <leader>p Vip:sort i<CR>
 
 " Add license
 nnoremap <leader>lg :read $HOME/.vim/templates/GPLv3.rst<CR>
+
+" Start Syntastic check
+nnoremap <leader>s :w<CR>:SyntasticCheck<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
