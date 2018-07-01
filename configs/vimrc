@@ -125,18 +125,20 @@ set listchars=tab:>-
 
 " Statusbar
 set laststatus=2
-set statusline+=\ %n\                           " Buffer number
-set statusline+=%{&ff}                          " File format
-set statusline+=%y                              " File type
-set statusline+=\ %<%F                          " Full path
-set statusline+=%m                              " Modified flag
-set statusline+=%=                              " Right aligned
-set statusline+=%{FugitiveStatusline()}         " Git plugin
-set statusline+=\ %5l                           " Current line
-set statusline+=/%L                             " Total lines
-set statusline+=%4v\                            " Virtual column number
-set statusline+=0x%04B\                         " Character under cursor
-set statusline+=%#warningmsg#                   " Syntastic plugin
+set statusline=
+set statusline+=\ %n                                        " Buffer number
+set statusline+=\ %y                                        " File type
+set statusline+=\ %{&fileencoding?&fileencoding:&encoding}  " Encoding
+set statusline+=[%{&ff}]                                    " File format
+set statusline+=\ %<%F                                      " Full path
+set statusline+=%m                                          " Modified flag
+set statusline+=%=                                          " Right aligned
+set statusline+=%{FugitiveStatusline()}                     " Git plugin
+set statusline+=\ %5l                                       " Current line
+set statusline+=/%L                                         " Total lines
+set statusline+=%4v                                         " Column number
+set statusline+=\ 0x%04B                                    " Current character
+set statusline+=\ %#warningmsg#                             " Syntastic plugin
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
