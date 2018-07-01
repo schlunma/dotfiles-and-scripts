@@ -42,21 +42,46 @@ compinit
 # Basic settings
 ###############################################################################
 KEYTIMEOUT=1                            # Timeout in ZLE mode
-autoload -U compinit && compinit        # Autocomplete
+autoload -Uz compinit && compinit       # Autocomplete
 zstyle ':completion:*' menu select
 ###############################################################################
 
 
 
 ###############################################################################
-# Colors
+# Prompt
 ###############################################################################
+# Colors
 autoload -Uz colors && colors
 PROMPT="%{$fg_bold[white]%}%*%{$reset_color%} \
 %{$fg_bold[red]%}%n%{$reset_color%}%{$fg[white]%}@\
 %{$reset_color%}%{$fg_bold[cyan]%}%m %{$fg_bold[yellow]%}%~ \
 "$'\n'"       > %{$reset_color%}"
 zle_highlight=(default:fg=green,bold)
+
+# Git
+setopt prompt_subst
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' stagedstr 'M'
+zstyle ':vcs_info:*' unstagedstr 'M'
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' formats "%{$fg_bold[white]%}[%{$reset_color%}\
+%{$fg_bold[green]%}%b%{$reset_color%}%{$fg_bold[white]%}]%{$reset_color%} \
+%{$fg_bold[green]%}%c%{$reset_color%}%{$fg_bold[yellow]%}%u%{$reset_color%}"
+zstyle ':vcs_info:*' actionformats "%{$fg_bold[white]%}[%{$reset_color%}\
+%{$fg_bold[green]%}%b%{$reset_color%}%{$fg_bold[white]%}|%{$reset_color%}\
+%{$fg_bold[red]%}%a%{$reset_color%}%{$fg_bold[white]%}]%{$reset_color%}"
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
+zstyle ':vcs_info:*' enable git
++vi-git-untracked() {
+    if [[ $("git" rev-parse --is-inside-work-tree 2>/dev/null) == 'true' ]] \
+        && [[ $("git" ls-files --other --directory --exclude-standard | \
+        sed q | wc -l | tr -d ' ') == 1 ]] ; then
+            hook_com[unstaged]+="%{$fg_bold[red]%}??%{$reset_color%}"
+    fi
+}
+precmd () { vcs_info }
+RPROMPT='${vcs_info_msg_0_}'
 ###############################################################################
 
 
