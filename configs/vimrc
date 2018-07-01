@@ -53,6 +53,7 @@ set softtabstop=4           " Tab = 4 spaces
 set colorcolumn=80          " Highlight 80 character boundary
 set fileformat=unix         " Use unix fileformat
 set number                  " Show line numbers
+set cursorline              " Highlight current line
 set hlsearch                " Highlight search results
 set splitbelow              " Vertical split: below current window
 set splitright              " Horizontal split: right of current window
@@ -116,9 +117,11 @@ highlight Pmenu ctermbg=Black ctermfg=White
 highlight PmenuSel ctermbg=22 ctermfg=White
 highlight StatusLine ctermfg=22
 
-" Highlight ncl syntax, tabs and trailing whitespace
+" Highlight ncl syntax
 autocmd BufRead,BufNewFile *.ncl set filetype=ncl
 autocmd! Syntax newlang source $VIM/ncl.vim
+
+" Highlight tabs and trailing whitespace
 autocmd VimEnter,WinEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 set list
 set listchars=tab:>-
