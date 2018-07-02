@@ -57,7 +57,6 @@ PROMPT="%{$fg_bold[white]%}%*%{$reset_color%} \
 %{$fg_bold[red]%}%n%{$reset_color%}%{$fg[white]%}@\
 %{$reset_color%}%{$fg_bold[cyan]%}%m %{$fg_bold[yellow]%}%~ \
 "$'\n'"       > %{$reset_color%}"
-zle_highlight=(default:fg=green,bold)
 
 # Git
 setopt prompt_subst
@@ -87,7 +86,7 @@ RPROMPT='${vcs_info_msg_0_}'
 
 
 ###############################################################################
-# Keybindings (vi mode)
+# Keybindings (vim-like configuration)
 ###############################################################################
 bindkey '^P'    up-history
 bindkey '^N'    down-history
@@ -129,4 +128,46 @@ fi
 ###############################################################################
 ANACONDA='anaconda3/bin'
 [[ ":$PATH:" =~ ":$HOME/$ANACONDA:" ]] || export PATH="$HOME/$ANACONDA:$PATH"
+###############################################################################
+
+
+
+###############################################################################
+# Plugins
+###############################################################################
+# Load plugins
+ZPLUGINS="$HOME/.zplugins"
+source $ZPLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZPLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Plugin settings
+bindkey '^ ' autosuggest-accept
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+ZSH_HIGHLIGHT_STYLES[default]='fg=white,bold'
+ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=red,bold'
+ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=yellow,bold'
+ZSH_HIGHLIGHT_STYLES[arg0]='fg=magenta,bold'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=green,bold'
+ZSH_HIGHLIGHT_STYLES[suffix-alias]='fg=green,bold'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=green,bold'
+ZSH_HIGHLIGHT_STYLES[function]='fg=green'
+ZSH_HIGHLIGHT_STYLES[command]='fg=green,bold'
+ZSH_HIGHLIGHT_STYLES[precommand]='fg=green,bold,underline'
+ZSH_HIGHLIGHT_STYLES[commandseparator]='fg=yellow,bold'
+ZSH_HIGHLIGHT_STYLES[redirection]='fg=yellow,bold'
+ZSH_HIGHLIGHT_STYLES[hashed-command]='fg=green,bold'
+ZSH_HIGHLIGHT_STYLES[path]='fg=white,bold,underline'
+ZSH_HIGHLIGHT_STYLES[globbing]='fg=yellow,bold'
+ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=magenta,bold'
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]='fg=cyan,bold'
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]='fg=cyan,bold'
+ZSH_HIGHLIGHT_STYLES[back-quoted-argument]='fg=magenta,bold'
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]='fg=yellow'
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]='fg=yellow'
+ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]='fg=yellow'
+ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=cyan'
+ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]='fg=cyan'
+ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]='fg=cyan'
+ZSH_HIGHLIGHT_STYLES[rc-quote]='fg=cyan'
+ZSH_HIGHLIGHT_STYLES[assign]='fg=cyan,bold'
 ###############################################################################
