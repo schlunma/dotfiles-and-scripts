@@ -81,7 +81,6 @@ let g:syntastic_auto_loc_list=1
 " Gruvbox
 colorscheme gruvbox
 let g:gruvbox_contrast_dark='hard'
-set t_Co=256
 set background=dark
 
 " NERDCommenter
@@ -112,10 +111,14 @@ let g:jedi#popup_select_first=0
 " Advanced settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Colors
-highlight ExtraWhitespace ctermbg=Red
-highlight Pmenu ctermbg=Black ctermfg=White
-highlight PmenuSel ctermbg=22 ctermfg=White
-highlight StatusLine ctermfg=22
+" 167: bright red
+" 234: background black
+" 223: warm white
+" 241: dark gray
+highlight ExtraWhitespace ctermbg=167
+highlight Pmenu ctermbg=234 ctermfg=223
+highlight PmenuSel ctermbg=241 ctermfg=223
+highlight StatusLine ctermfg=241
 
 " Highlight ncl syntax
 autocmd BufRead,BufNewFile *.ncl set filetype=ncl
