@@ -52,16 +52,15 @@ zstyle ':completion:*' menu select
 # Prompt
 ###############################################################################
 # Colors
-blue='%F{66}'
-cyan='%F{109}'
-green='%F{142}'
-red='%F{167}'
-orange='%F{172}'
-yellow='%F{214}'
-white='%F{223}'
-gray='%F{245}'
+cyan='%F{blue}%B'
+green='%F{green}%B'
+red='%F{red}%B'
+orange='%F{white}%B'
+white='%F{fg}%B'
+gray='%F{fg}'
 autoload -Uz colors && colors
-PROMPT="$white%*%f $red%n%f$gray@%f$cyan%m%f $yellow%~ "$'\n'"       > %f"
+PROMPT="$white%*%f%b $red%n%f%b$gray@%f$cyan%m%f%b \
+$orange%~ "$'\n'"       > %f%b"
 
 # Git
 setopt prompt_subst
@@ -70,7 +69,7 @@ zstyle ':vcs_info:*' stagedstr 'M'
 zstyle ':vcs_info:*' unstagedstr 'M'
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' formats "$white [%f$green%b%f$white]%f \
-$green%c%f$yellow%u%f"
+$green%c%f$orange%u%f"
 zstyle ':vcs_info:*' actionformats "$white [%f$green%b%f$white|%f\
 $red%a%f$white]%f"
 zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
@@ -115,7 +114,6 @@ alias la='ls -A'
 alias l='ls -CF'
 alias sq='squeue -l -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M \
 %.12l %.6D  %R"'
-alias tmux='tmux -2'
 if command -v 'checkssh' &>/dev/null; then
     alias git='checkssh; git'
     alias rsync='checkssh; rsync -aP'
@@ -146,41 +144,32 @@ source $ZPLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Plugin settings
 bindkey '^ ' autosuggest-accept
-int_blue='66'
-int_cyan='109'
-int_green='142'
-int_red='167'
-int_orange='172'
-int_magenta='175'
-int_yellow='214'
-int_white='223'
-int_gray='245'
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
-ZSH_HIGHLIGHT_STYLES[default]="fg=$int_white"
-ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=$int_red,bold"
-ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=$int_yellow"
-ZSH_HIGHLIGHT_STYLES[arg0]="fg=$int_magenta"
-ZSH_HIGHLIGHT_STYLES[alias]="fg=$int_green"
-ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=$int_green"
-ZSH_HIGHLIGHT_STYLES[builtin]="fg=$int_green"
-ZSH_HIGHLIGHT_STYLES[function]="fg=$int_green"
-ZSH_HIGHLIGHT_STYLES[command]="fg=$int_green"
-ZSH_HIGHLIGHT_STYLES[precommand]="fg=$int_green,underline"
-ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=$int_yellow"
-ZSH_HIGHLIGHT_STYLES[redirection]="fg=$int_yellow"
-ZSH_HIGHLIGHT_STYLES[hashed-command]="fg=$int_green"
-ZSH_HIGHLIGHT_STYLES[path]="fg=$int_white,underline"
-ZSH_HIGHLIGHT_STYLES[globbing]="fg=$int_yellow"
-ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=$int_magenta"
-ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=$int_cyan"
-ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=$int_cyan"
-ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=$int_magenta"
-ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=$int_orange"
-ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=$int_orange"
-ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=$int_orange"
-ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]="fg=$int_blue"
-ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]="fg=$int_blue"
-ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=$int_blue"
-ZSH_HIGHLIGHT_STYLES[rc-quote]="fg=$int_blue"
-ZSH_HIGHLIGHT_STYLES[assign]="fg=$int_cyan"
+ZSH_HIGHLIGHT_STYLES[default]="fg=fg,bold"
+ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=red,bold"
+ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[arg0]="fg=magenta,bold"
+ZSH_HIGHLIGHT_STYLES[alias]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[builtin]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[function]="fg=green"
+ZSH_HIGHLIGHT_STYLES[command]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[precommand]="fg=green,bold,underline"
+ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[redirection]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[hashed-command]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[path]="fg=fg,bold,underline"
+ZSH_HIGHLIGHT_STYLES[globbing]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=magenta,bold"
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=cyan,bold"
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=cyan,bold"
+ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=magenta,bold"
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=yellow"
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=yellow"
+ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=yellow"
+ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[rc-quote]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
 ###############################################################################
