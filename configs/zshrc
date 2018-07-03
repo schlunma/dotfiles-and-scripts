@@ -16,6 +16,15 @@
 
 
 ###############################################################################
+# Get zsh major version
+###############################################################################
+ZVERSION=(${(s/./)ZSH_VERSION})
+ZSH_MAJORVERSION=$ZVERSION[1]
+###############################################################################
+
+
+
+###############################################################################
 # Lines configured by zsh-newuser-install
 ###############################################################################
 HISTFILE=~/.histfile
@@ -58,31 +67,40 @@ red='%F{red}%B'
 orange='%F{white}%B'
 white='%F{fg}%B'
 gray='%F{fg}'
+res='%f%b'
 autoload -Uz colors && colors
-PROMPT="$white%*%f%b $red%n%f%b$gray@%f$cyan%m%f%b \
-$orange%~ "$'\n'"       > %f%b"
+if [[ ZSH_MAJORVERSION -ge 5 ]]; then
+    PROMPT="$white%*$res $red%n$res$gray@$res$cyan%m$res \
+$orange%~ "$'\n'"       > $res"
+else
+    PROMPT="%* %{$fg_bold[red]%}%n%{$reset_color%}@%{$fg_bold[cyan]%}%m \
+%{$fg_bold[yellow]%}%~ "$'\n'"       > %{$reset_color%}%{$fg_bold[green]%}"
+    POSTEDIT=$'\e[0m'
+fi
 
-# Git
-setopt prompt_subst
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' stagedstr 'M'
-zstyle ':vcs_info:*' unstagedstr 'M'
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' formats "$white [%f$green%b%f$white]%f \
+# Git (only possible when zsh > v5.0.0)
+if [[ ZSH_MAJORVERSION -ge 5 ]]; then
+    setopt prompt_subst
+    autoload -Uz vcs_info
+    zstyle ':vcs_info:*' stagedstr 'M'
+    zstyle ':vcs_info:*' unstagedstr 'M'
+    zstyle ':vcs_info:*' check-for-changes true
+    zstyle ':vcs_info:*' formats "$white [%f$green%b%f$white]%f \
 $green%c%f$orange%u%f"
-zstyle ':vcs_info:*' actionformats "$white [%f$green%b%f$white|%f\
+    zstyle ':vcs_info:*' actionformats "$white [%f$green%b%f$white|%f\
 $red%a%f$white]%f"
-zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
-zstyle ':vcs_info:*' enable git
-+vi-git-untracked() {
-    if [[ $("git" rev-parse --is-inside-work-tree 2>/dev/null) == 'true' ]] \
-        && [[ $("git" ls-files --other --directory --exclude-standard | \
-        sed q | wc -l | tr -d ' ') == 1 ]] ; then
-            hook_com[unstaged]+="$red??%f"
-    fi
-}
-precmd () { vcs_info }
-RPROMPT='${vcs_info_msg_0_}'
+    zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
+    zstyle ':vcs_info:*' enable git
+    +vi-git-untracked() {
+        if [[ $("git" rev-parse --is-inside-work-tree 2>/dev/null) == \
+            'true' ]] && [[ $("git" ls-files --other --directory \
+            --exclude-standard | sed q | wc -l | tr -d ' ') == 1 ]] ; then
+                hook_com[unstaged]+="$red??%f"
+        fi
+    }
+    precmd () { vcs_info }
+    RPROMPT='${vcs_info_msg_0_}'
+fi
 ###############################################################################
 
 
@@ -135,41 +153,43 @@ ANACONDA='anaconda3/bin'
 
 
 ###############################################################################
-# Plugins
+# Plugins (load only when zsh > v5.0.0)
 ###############################################################################
 # Load plugins
-ZPLUGINS="$HOME/.zplugins"
-source $ZPLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $ZPLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [[ ZSH_MAJORVERSION -ge 5 ]]; then
+    ZPLUGINS="$HOME/.zplugins"
+    source $ZPLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    source $ZPLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-# Plugin settings
-bindkey '^ ' autosuggest-accept
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
-ZSH_HIGHLIGHT_STYLES[default]="fg=fg,bold"
-ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=red,bold"
-ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=yellow,bold"
-ZSH_HIGHLIGHT_STYLES[arg0]="fg=magenta,bold"
-ZSH_HIGHLIGHT_STYLES[alias]="fg=green,bold"
-ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=green,bold"
-ZSH_HIGHLIGHT_STYLES[builtin]="fg=green,bold"
-ZSH_HIGHLIGHT_STYLES[function]="fg=green"
-ZSH_HIGHLIGHT_STYLES[command]="fg=green,bold"
-ZSH_HIGHLIGHT_STYLES[precommand]="fg=green,bold,underline"
-ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=yellow,bold"
-ZSH_HIGHLIGHT_STYLES[redirection]="fg=yellow,bold"
-ZSH_HIGHLIGHT_STYLES[hashed-command]="fg=green,bold"
-ZSH_HIGHLIGHT_STYLES[path]="fg=fg,bold,underline"
-ZSH_HIGHLIGHT_STYLES[globbing]="fg=yellow,bold"
-ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=magenta,bold"
-ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=cyan,bold"
-ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=cyan,bold"
-ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=magenta,bold"
-ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=yellow"
-ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=yellow"
-ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=yellow"
-ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]="fg=cyan"
-ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]="fg=cyan"
-ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=cyan"
-ZSH_HIGHLIGHT_STYLES[rc-quote]="fg=cyan"
-ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
+    # Plugin settings
+    bindkey '^ ' autosuggest-accept
+    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+    ZSH_HIGHLIGHT_STYLES[default]="fg=fg,bold"
+    ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=red,bold"
+    ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=yellow,bold"
+    ZSH_HIGHLIGHT_STYLES[arg0]="fg=magenta,bold"
+    ZSH_HIGHLIGHT_STYLES[alias]="fg=green,bold"
+    ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=green,bold"
+    ZSH_HIGHLIGHT_STYLES[builtin]="fg=green,bold"
+    ZSH_HIGHLIGHT_STYLES[function]="fg=green"
+    ZSH_HIGHLIGHT_STYLES[command]="fg=green,bold"
+    ZSH_HIGHLIGHT_STYLES[precommand]="fg=green,bold,underline"
+    ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=yellow,bold"
+    ZSH_HIGHLIGHT_STYLES[redirection]="fg=yellow,bold"
+    ZSH_HIGHLIGHT_STYLES[hashed-command]="fg=green,bold"
+    ZSH_HIGHLIGHT_STYLES[path]="fg=fg,bold,underline"
+    ZSH_HIGHLIGHT_STYLES[globbing]="fg=yellow,bold"
+    ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=magenta,bold"
+    ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=cyan,bold"
+    ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=cyan,bold"
+    ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=magenta,bold"
+    ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=yellow"
+    ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=yellow"
+    ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=yellow"
+    ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]="fg=cyan"
+    ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]="fg=cyan"
+    ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=cyan"
+    ZSH_HIGHLIGHT_STYLES[rc-quote]="fg=cyan"
+    ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
+fi
 ###############################################################################
