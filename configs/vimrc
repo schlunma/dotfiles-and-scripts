@@ -8,32 +8,42 @@
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Setup Vundle
+" Minimal required vim version for complex features
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
+let g:required_vim_version=704
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Load plugins
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'kien/ctrlp.vim'
-Plugin 'vim-syntastic/syntastic'
-Plugin 'morhetz/gruvbox'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'tmhedberg/SimpylFold'
-Plugin 'vim-scripts/indentpython.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'tpope/vim-surround'
-if has('python3')
-    Plugin 'davidhalter/jedi-vim'
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Setup Vundle (only for vim >= 7.4)
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if v:version >= g:required_vim_version
+    set nocompatible
+    filetype off
+    set rtp+=~/.vim/bundle/Vundle.vim
+
+    " Load plugins
+    call vundle#begin()
+    Plugin 'VundleVim/Vundle.vim'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'Xuyuanp/nerdtree-git-plugin'
+    Plugin 'kien/ctrlp.vim'
+    Plugin 'vim-syntastic/syntastic'
+    Plugin 'morhetz/gruvbox'
+    Plugin 'scrooloose/nerdcommenter'
+    Plugin 'tmhedberg/SimpylFold'
+    Plugin 'vim-scripts/indentpython.vim'
+    Plugin 'tpope/vim-fugitive'
+    Plugin 'nathanaelkane/vim-indent-guides'
+    Plugin 'SirVer/ultisnips'
+    Plugin 'honza/vim-snippets'
+    Plugin 'tpope/vim-surround'
+    if has('python3')
+        Plugin 'davidhalter/jedi-vim'
+    endif
+    call vundle#end()
 endif
-call vundle#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -50,13 +60,16 @@ set expandtab               " Tabs = spaces
 set tabstop=4               " Tab length = 4 spaces
 set shiftwidth=4            " Determines range of <<, >> and ==
 set softtabstop=4           " Tab = 4 spaces
-set colorcolumn=80          " Highlight 80 character boundary
 set fileformat=unix         " Use unix fileformat
 set number                  " Show line numbers
 set cursorline              " Highlight current line
 set hlsearch                " Highlight search results
 set splitbelow              " Vertical split: below current window
 set splitright              " Horizontal split: right of current window
+set foldmethod=indent       " Fold using indents
+set foldnestmax=2           " Nest at most 2 levels when folding
+set foldlevel=2             " Start with no folds
+set background=dark         " Use dark background
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -64,45 +77,42 @@ set splitright              " Horizontal split: right of current window
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" NERDTree
-augroup OpenNERDTree
-    autocmd!
-    autocmd VimEnter * NERDTree
-    autocmd VimEnter * wincmd l
-augroup END
-autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTree') &&
-    \ b:NERDTree.isTabTree()) | q | endif
+if v:version >= g:required_vim_version
+    " NERDTree
+    augroup OpenNERDTree
+        autocmd!
+        autocmd VimEnter * NERDTree
+        autocmd VimEnter * wincmd l
+    augroup END
+    autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTree') &&
+        \ b:NERDTree.isTabTree()) | q | endif
 
-" Syntastic
-autocmd VimEnter * silent! SyntasticToggleMode
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_auto_loc_list=1
+    " Syntastic
+    autocmd VimEnter * silent! SyntasticToggleMode
+    let g:syntastic_always_populate_loc_list=1
+    let g:syntastic_auto_loc_list=1
 
-" Gruvbox
-colorscheme gruvbox
-let g:gruvbox_contrast_dark='hard'
-set background=dark
+    " Gruvbox
+    let g:gruvbox_contrast_dark='hard'
 
-" NERDCommenter
-let g:NERDSpaceDelims=1
-let g:NERDDefaultAlign='left'
-let g:NERDCommentEmptyLines=1
+    " NERDCommenter
+    let g:NERDSpaceDelims=1
+    let g:NERDDefaultAlign='left'
+    let g:NERDCommentEmptyLines=1
 
-" SimplyFold
-let g:SimpylFold_docstring_preview=1
-set foldmethod=indent
-set foldnestmax=2
-set foldlevel=2
+    " SimplyFold
+    let g:SimpylFold_docstring_preview=1
 
-" Snippets
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+    " Snippets
+    let g:UltiSnipsExpandTrigger="<tab>"
+    let g:UltiSnipsJumpForwardTrigger="<c-b>"
+    let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
-" Jedi-vim
-let g:jedi#use_splits_not_buffers="right"
-let g:jedi#show_call_signatures="1"
-let g:jedi#popup_select_first=0
+    " Jedi-vim
+    let g:jedi#use_splits_not_buffers="right"
+    let g:jedi#show_call_signatures="1"
+    let g:jedi#popup_select_first=0
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -110,15 +120,18 @@ let g:jedi#popup_select_first=0
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Advanced settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Colors
-" 167: bright red
-" 234: background black
-" 223: warm white
-" 241: dark gray
-highlight ExtraWhitespace ctermbg=167
-highlight Pmenu ctermbg=234 ctermfg=223
-highlight PmenuSel ctermbg=241 ctermfg=223
-highlight StatusLine ctermfg=241
+" Colorscheme
+if v:version >= g:required_vim_version
+    colorscheme gruvbox
+else
+    colorscheme ron
+endif
+
+" Other colors (9: bright red)
+highlight ExtraWhitespace ctermbg=9
+highlight Pmenu ctermbg=Black ctermfg=None
+highlight PmenuSel ctermbg=Darkgrey ctermfg=None
+highlight StatusLine ctermfg=Darkgrey
 
 " Highlight ncl syntax
 autocmd BufRead,BufNewFile *.ncl set filetype=ncl
@@ -128,6 +141,13 @@ autocmd! Syntax newlang source $VIM/ncl.vim
 autocmd VimEnter,WinEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 set list
 set listchars=tab:>-
+
+" Highlight 80th column
+if exists('+colorcolumn')
+    set colorcolumn=80
+else
+    autocmd BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>79v.\+', -1)
+endif
 
 " Statusbar
 set laststatus=2
@@ -139,14 +159,18 @@ set statusline+=[%{&ff}]                                    " File format
 set statusline+=\ %<%F                                      " Full path
 set statusline+=%m                                          " Modified flag
 set statusline+=%=                                          " Right aligned
-set statusline+=%{FugitiveStatusline()}                     " Git plugin
+if v:version >= g:required_vim_version
+    set statusline+=%{FugitiveStatusline()}                 " Git plugin
+endif
 set statusline+=\ %5l                                       " Current line
 set statusline+=/%L                                         " Total lines
 set statusline+=%4v                                         " Column number
 set statusline+=\ 0x%04B                                    " Current character
-set statusline+=\ %#warningmsg#                             " Syntastic plugin
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+if v:version >= g:required_vim_version
+    set statusline+=\ %#warningmsg#                         " Syntastic plugin
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -182,5 +206,7 @@ nnoremap <silent> <leader>p Vip:sort i<CR>
 nnoremap <leader>lg :read $HOME/.vim/templates/GPLv3.rst<CR>
 
 " Start Syntastic check
-nnoremap <leader>s :w<CR>:SyntasticCheck<CR>
+if v:version >= g:required_vim_version
+    nnoremap <leader>s :w<CR>:SyntasticCheck<CR>
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
