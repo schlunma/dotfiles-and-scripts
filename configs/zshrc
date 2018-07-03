@@ -16,10 +16,11 @@
 
 
 ###############################################################################
-# Get zsh major version
+# Minimal required zsh version for complex features
 ###############################################################################
 ZVERSION=(${(s/./)ZSH_VERSION})
-ZSH_MAJORVERSION=$ZVERSION[1]
+ZSH_MAJOR_VERSION=$ZVERSION[1]
+ZSH_REQUIRED_VERSION=5
 ###############################################################################
 
 
@@ -69,7 +70,7 @@ white='%F{fg}%B'
 gray='%F{fg}'
 res='%f%b'
 autoload -Uz colors && colors
-if [[ ZSH_MAJORVERSION -ge 5 ]]; then
+if [[ $ZSH_MAJOR_VERSION -ge $ZSH_REQUIRED_VERSION ]]; then
     PROMPT="$white%*$res $red%n$res$gray@$res$cyan%m$res \
 $orange%~ "$'\n'"       > $res"
 else
@@ -78,8 +79,8 @@ else
     POSTEDIT=$'\e[0m'
 fi
 
-# Git (only possible when zsh > v5.0.0)
-if [[ ZSH_MAJORVERSION -ge 5 ]]; then
+# Git
+if [[ $ZSH_MAJOR_VERSION -ge $ZSH_REQUIRED_VERSION ]]; then
     setopt prompt_subst
     autoload -Uz vcs_info
     zstyle ':vcs_info:*' stagedstr 'M'
@@ -153,10 +154,10 @@ ANACONDA='anaconda3/bin'
 
 
 ###############################################################################
-# Plugins (load only when zsh > v5.0.0)
+# Plugins
 ###############################################################################
 # Load plugins
-if [[ ZSH_MAJORVERSION -ge 5 ]]; then
+if [[ $ZSH_MAJOR_VERSION -ge $ZSH_REQUIRED_VERSION ]]; then
     ZPLUGINS="$HOME/.zplugins"
     source $ZPLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     source $ZPLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
