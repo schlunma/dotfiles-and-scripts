@@ -10,15 +10,20 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Minimal required vim version for complex features
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:required_vim_version=704
+let s:required_vim_version=704
+if v:version >= s:required_vim_version
+    let s:vim_is_required_version=1
+else
+    let s:vim_is_required_version=0
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Setup Vundle (only for vim >= 7.4)
+" Setup Vundle
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if v:version >= g:required_vim_version
+if s:vim_is_required_version
     set nocompatible
     filetype off
     set rtp+=~/.vim/bundle/Vundle.vim
@@ -77,7 +82,7 @@ set background=dark         " Use dark background
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if v:version >= g:required_vim_version
+if s:vim_is_required_version
     " NERDTree
     augroup OpenNERDTree
         autocmd!
@@ -121,7 +126,7 @@ endif
 " Advanced settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Colorscheme
-if v:version >= g:required_vim_version
+if s:vim_is_required_version
     colorscheme gruvbox
 else
     colorscheme ron
@@ -159,14 +164,14 @@ set statusline+=[%{&ff}]                                    " File format
 set statusline+=\ %<%F                                      " Full path
 set statusline+=%m                                          " Modified flag
 set statusline+=%=                                          " Right aligned
-if v:version >= g:required_vim_version
+if s:vim_is_required_version
     set statusline+=%{FugitiveStatusline()}                 " Git plugin
 endif
 set statusline+=\ %5l                                       " Current line
 set statusline+=/%L                                         " Total lines
 set statusline+=%4v                                         " Column number
 set statusline+=\ 0x%04B                                    " Current character
-if v:version >= g:required_vim_version
+if s:vim_is_required_version
     set statusline+=\ %#warningmsg#                         " Syntastic plugin
     set statusline+=%{SyntasticStatuslineFlag()}
     set statusline+=%*
@@ -206,7 +211,7 @@ nnoremap <silent> <leader>p Vip:sort i<CR>
 nnoremap <leader>lg :read $HOME/.vim/templates/GPLv3.rst<CR>
 
 " Start Syntastic check
-if v:version >= g:required_vim_version
+if s:vim_is_required_version
     nnoremap <leader>s :w<CR>:SyntasticCheck<CR>
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

@@ -18,9 +18,18 @@
 ###############################################################################
 # Minimal required zsh version for complex features
 ###############################################################################
-ZVERSION=(${(s/./)ZSH_VERSION})
-ZSH_MAJOR_VERSION=$ZVERSION[1]
-ZSH_REQUIRED_VERSION=5
+ZSH_VERSION_ARRAY=(${(s/./)ZSH_VERSION})
+ZSH_REQUIRED_VERSION=(4 3 11)
+ZSH_IS_REQUIRED_VERSION=true
+for (( i=1; i<=$#ZSH_VERSION_ARRAY; i++ )) do
+    if [[ $ZSH_VERSION_ARRAY[i] -gt ZSH_REQUIRED_VERSION[i] ]]; then
+        ZSH_IS_REQUIRED_VERSION=true
+        break
+    elif [[ $ZSH_VERSION_ARRAY[i] -lt ZSH_REQUIRED_VERSION[i] ]]; then
+        ZSH_IS_REQUIRED_VERSION=false
+        break
+    fi
+done
 ###############################################################################
 
 
@@ -62,17 +71,17 @@ zstyle ':completion:*' menu select
 # Prompt
 ###############################################################################
 # Colors
-cyan='%F{blue}%B'
-green='%F{green}%B'
-red='%F{red}%B'
-orange='%F{white}%B'
-white='%F{fg}%B'
-gray='%F{fg}'
-res='%f%b'
+CYAN='%F{blue}%B'
+GREEN='%F{green}%B'
+RED='%F{red}%B'
+ORANGE='%F{white}%B'
+WHITE='%F{fg}%B'
+GRAY='%F{fg}'
+RES='%f%b'
 autoload -Uz colors && colors
-if [[ $ZSH_MAJOR_VERSION -ge $ZSH_REQUIRED_VERSION ]]; then
-    PROMPT="$white%*$res $red%n$res$gray@$res$cyan%m$res \
-$orange%~ "$'\n'"       > $res"
+if [ $ZSH_IS_REQUIRED_VERSION = true ]; then
+    PROMPT="$WHITE%*$RES $RED%n$RES$GRAY@$RES$CYAN%m$RES \
+$ORANGE%~ "$'\n'"       > $RES"
 else
     PROMPT="%* %{$fg_bold[red]%}%n%{$reset_color%}@%{$fg_bold[cyan]%}%m \
 %{$fg_bold[yellow]%}%~ "$'\n'"       > %{$reset_color%}%{$fg_bold[green]%}"
@@ -80,23 +89,23 @@ else
 fi
 
 # Git
-if [[ $ZSH_MAJOR_VERSION -ge $ZSH_REQUIRED_VERSION ]]; then
+if [ $ZSH_IS_REQUIRED_VERSION = true ]; then
     setopt prompt_subst
     autoload -Uz vcs_info
     zstyle ':vcs_info:*' stagedstr 'M'
     zstyle ':vcs_info:*' unstagedstr 'M'
     zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' formats "$white [%f$green%b%f$white]%f \
-$green%c%f$orange%u%f"
-    zstyle ':vcs_info:*' actionformats "$white [%f$green%b%f$white|%f\
-$red%a%f$white]%f"
+    zstyle ':vcs_info:*' formats "$WHITE [%f$GREEN%b%f$WHITE]%f \
+$GREEN%c%f$ORANGE%u%f"
+    zstyle ':vcs_info:*' actionformats "$WHITE [%f$GREEN%b%f$WHITE|%f\
+$RED%a%f$WHITE]%f"
     zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
     zstyle ':vcs_info:*' enable git
     +vi-git-untracked() {
         if [[ $("git" rev-parse --is-inside-work-tree 2>/dev/null) == \
             'true' ]] && [[ $("git" ls-files --other --directory \
             --exclude-standard | sed q | wc -l | tr -d ' ') == 1 ]] ; then
-                hook_com[unstaged]+="$red??%f"
+                hook_com[unstaged]+="$RED??%f"
         fi
     }
     precmd () { vcs_info }
@@ -157,7 +166,7 @@ ANACONDA='anaconda3/bin'
 # Plugins
 ###############################################################################
 # Load plugins
-if [[ $ZSH_MAJOR_VERSION -ge $ZSH_REQUIRED_VERSION ]]; then
+if [ $ZSH_IS_REQUIRED_VERSION = true ]; then
     ZPLUGINS="$HOME/.zplugins"
     source $ZPLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     source $ZPLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
