@@ -54,7 +54,7 @@ endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Basic settings
+" Global basic settings (maybe overwritten in ftplugin)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 filetype plugin indent on   " Smarter indentation based on filetype
 syntax on                   " Enable syntax highlighting
@@ -142,7 +142,7 @@ highlight StatusLine ctermfg=Darkgrey
 autocmd BufRead,BufNewFile *.ncl set filetype=ncl
 autocmd! Syntax newlang source $VIM/ncl.vim
 
-" Highlighting yml is really slow with standard regexp engine
+" Highlighting yaml files is really slow with standard regexp engine
 if s:vim_is_required_version
     set regexpengine=1
 endif
