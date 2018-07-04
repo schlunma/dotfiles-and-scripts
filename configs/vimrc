@@ -57,7 +57,7 @@ endif
 " Basic settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 filetype plugin indent on   " Smarter indentation based on filetype
-syntax enable               " Enable syntax highlighting
+syntax on                   " Enable syntax highlighting
 let mapleader=' '           " Set <leader> key to <space>
 set encoding=utf-8          " Use utf-8 encoding
 set shell=zsh               " Support zsh shell
@@ -141,6 +141,11 @@ highlight StatusLine ctermfg=Darkgrey
 " Highlight ncl syntax
 autocmd BufRead,BufNewFile *.ncl set filetype=ncl
 autocmd! Syntax newlang source $VIM/ncl.vim
+
+" Highlighting yml is really slow with standard regexp engine
+if s:vim_is_required_version
+    set regexpengine=1
+endif
 
 " Highlight tabs and trailing whitespace
 autocmd VimEnter,WinEnter * match ExtraWhitespace /\s\+\%#\@<!$/
