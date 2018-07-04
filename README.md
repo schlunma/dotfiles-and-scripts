@@ -1,2 +1,2 @@
-# scripts-and-configs
-This repository contains useful scripts and configuration files.
+# dotfiles-and-scripts
+This repository contains useful dotfiles and scripts.
