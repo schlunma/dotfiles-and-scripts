@@ -6,15 +6,15 @@
 
 
 # SSH keys, $SSH_KEY_REMOVE gets removed if desired
-SSH_KEY_ADD="$HOME/.ssh/KEY_TO_BE_ADDED"
-SSH_KEY_REMOVE="$HOME/.ssh/KEY_TO_BE_REMOVED"
+SSH_KEY_ADD="$HOME/.ssh/id_rsa_ADD"
+SSH_KEY_REMOVE="$HOME/.ssh/id_rsa_REMOVE"
 
 # Get current status of ssh-add
 ssh-add -l &>/dev/null
 EXITCODE=$?
 
 # Check if agent is running
-if [ ${EXITCODE} -gt 1 ]; then
+if [ $EXITCODE -gt 1 ]; then
     >&2 echo "WARNING: SSH agent not running!"
     exit 1
 fi
@@ -28,6 +28,6 @@ if [ $# -gt 0 ]; then
 fi
 
 # Add desired SSH key if necessary
-if [ ${EXITCODE} -gt 0 ]; then
+if [ $EXITCODE -gt 0 ]; then
     ssh-add $SSH_KEY_ADD
 fi
