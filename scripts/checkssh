@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Cache SSH key if necessary
+# Copyright (c) 2018 Manuel Schlund <schlunma@gmail.com>
+# Licensed under the GNU General Public License v3.0 (or later).
+
+
+# SSH keys, $SSH_KEY_REMOVE gets removed if desired
+SSH_KEY_ADD="$HOME/.ssh/KEY_TO_BE_ADDED"
+SSH_KEY_REMOVE="$HOME/.ssh/KEY_TO_BE_REMOVED"
+
+# Get current status of ssh-add
+ssh-add -l &>/dev/null
+EXITCODE=$?
+
+# Check if agent is running
+if [ ${EXITCODE} -gt 1 ]; then
+    >&2 echo "WARNING: SSH agent not running!"
+    exit 1
+fi
+
+# Remove another specified key if desired (run script with arbitrary argument)
+if [ $# -gt 0 ]; then
+    ssh-add -d $SSH_KEY_REMOVE &>/dev/null
+    if [ $? -eq 0 ]; then
+        echo "SSH agent: Removed key $SSH_KEY_REMOVE for security reasons."
+    fi
+fi
+
+# Add desired SSH key if necessary
+if [ ${EXITCODE} -gt 0 ]; then
+    ssh-add $SSH_KEY_ADD
+fi
