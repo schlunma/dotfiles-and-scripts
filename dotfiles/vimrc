@@ -9,7 +9,9 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let s:enable_syntastic=1
+let s:enable_ssh_features=!$SSH_SESSION
+let s:enable_fugitive=s:enable_ssh_features
+let s:enable_syntastic=s:enable_ssh_features
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -45,13 +47,15 @@ if s:vim_is_required_version
     Plugin 'scrooloose/nerdcommenter'
     Plugin 'tmhedberg/SimpylFold'
     Plugin 'vim-scripts/indentpython.vim'
-    Plugin 'tpope/vim-fugitive'
     Plugin 'nathanaelkane/vim-indent-guides'
     Plugin 'SirVer/ultisnips'
     Plugin 'honza/vim-snippets'
     Plugin 'tpope/vim-surround'
     if has('python3')
         Plugin 'davidhalter/jedi-vim'
+    endif
+    if s:enable_fugitive
+        Plugin 'tpope/vim-fugitive'
     endif
     if s:enable_syntastic
         Plugin 'vim-syntastic/syntastic'
@@ -180,7 +184,7 @@ set statusline+=[%{&ff}]                                    " File format
 set statusline+=\ %<%F                                      " Full path
 set statusline+=%m                                          " Modified flag
 set statusline+=%=                                          " Right aligned
-if s:vim_is_required_version
+if s:vim_is_required_version && s:enable_fugitive
     set statusline+=%{FugitiveStatusline()}                 " Git plugin
 endif
 set statusline+=\ %5l                                       " Current line
