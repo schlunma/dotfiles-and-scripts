@@ -7,6 +7,14 @@
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Settings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let s:enable_syntastic=1
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Minimal required vim version for complex features
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let s:required_vim_version=704
@@ -33,7 +41,6 @@ if s:vim_is_required_version
     Plugin 'scrooloose/nerdtree'
     Plugin 'Xuyuanp/nerdtree-git-plugin'
     Plugin 'kien/ctrlp.vim'
-    Plugin 'vim-syntastic/syntastic'
     Plugin 'morhetz/gruvbox'
     Plugin 'scrooloose/nerdcommenter'
     Plugin 'tmhedberg/SimpylFold'
@@ -45,6 +52,9 @@ if s:vim_is_required_version
     Plugin 'tpope/vim-surround'
     if has('python3')
         Plugin 'davidhalter/jedi-vim'
+    endif
+    if s:enable_syntastic
+        Plugin 'vim-syntastic/syntastic'
     endif
     call vundle#end()
 endif
@@ -92,9 +102,11 @@ if s:vim_is_required_version
         \ b:NERDTree.isTabTree()) | q | endif
 
     " Syntastic
-    autocmd VimEnter * silent! SyntasticToggleMode
-    let g:syntastic_always_populate_loc_list=1
-    let g:syntastic_auto_loc_list=1
+    if s:enable_syntastic
+        autocmd VimEnter * silent! SyntasticToggleMode
+        let g:syntastic_always_populate_loc_list=1
+        let g:syntastic_auto_loc_list=1
+    endif
 
     " Gruvbox
     let g:gruvbox_contrast_dark='hard'
@@ -175,7 +187,7 @@ set statusline+=\ %5l                                       " Current line
 set statusline+=/%L                                         " Total lines
 set statusline+=%4v                                         " Column number
 set statusline+=\ 0x%04B                                    " Current character
-if s:vim_is_required_version
+if s:vim_is_required_version && s:enable_syntastic
     set statusline+=\ %#warningmsg#                         " Syntastic plugin
     set statusline+=%{SyntasticStatuslineFlag()}
     set statusline+=%*
@@ -215,7 +227,7 @@ nnoremap <silent> <leader>p Vip:sort i<CR>
 nnoremap <leader>lg :read $HOME/.vim/templates/GPLv3.rst<CR>
 
 " Start Syntastic check
-if s:vim_is_required_version
+if s:vim_is_required_version && s:enable_syntastic
     nnoremap <leader>s :w<CR>:SyntasticCheck<CR>
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
