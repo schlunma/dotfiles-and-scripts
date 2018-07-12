@@ -34,12 +34,16 @@ done
 
 
 ###############################################################################
-# Check if session is SSH session
+# Check if session is SSH session and start gpg-agent if necessary
 ###############################################################################
-if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
+if (( ${+SSH_CLIENT} )) || (( ${+SSH_TTY} )); then
     export SSH_SESSION=1
 else
     export SSH_SESSION=0
+fi
+gpg-agent &>/dev/null
+if [[ $? -ne 0 ]]; then
+    gpg-agent --daemon --use-standard-socket &>/dev/null
 fi
 ###############################################################################
 
