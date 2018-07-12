@@ -18,7 +18,7 @@
 # Minimal required zsh version for complex features
 ###############################################################################
 ZSH_VERSION_ARRAY=(${(s/./)ZSH_VERSION})
-ZSH_REQUIRED_VERSION=(5 0 5)
+ZSH_REQUIRED_VERSION=(4 3 11)
 ZSH_IS_REQUIRED_VERSION=true
 for (( i=1; i<=$#ZSH_VERSION_ARRAY; i++ )) do
     if [[ $ZSH_VERSION_ARRAY[i] -gt ZSH_REQUIRED_VERSION[i] ]]; then
