@@ -116,9 +116,12 @@ if s:vim_is_required_version
     let g:gruvbox_contrast_dark='hard'
 
     " NERDCommenter
-    let g:NERDSpaceDelims=1
     let g:NERDDefaultAlign='left'
     let g:NERDCommentEmptyLines=1
+    let g:NERDCustomDelimiters={
+        \ 'ncl': {'left': '; '},
+        \ 'vim': {'left': '" '},
+        \ 'yaml': {'left': '# '}}
 
     " SimplyFold
     let g:SimpylFold_docstring_preview=1
