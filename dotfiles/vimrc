@@ -117,7 +117,6 @@ if s:vim_is_required_version
 
     " NERDCommenter
     let g:NERDDefaultAlign='left'
-    let g:NERDCommentEmptyLines=1
     let g:NERDCustomDelimiters={
         \ 'ncl': {'left': '; '},
         \ 'vim': {'left': '" '},
