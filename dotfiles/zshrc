@@ -175,9 +175,15 @@ fi
 UTF8='.UTF-8'
 [[ $LANG =~ $UTF8 ]] || export LANG="$LANG$UTF8"
 
-# Anaconda (due to bug not possible in .zprofile or .zshenv)
-ANACONDA='anaconda3/bin'
-[[ ":$PATH:" =~ ":$HOME/$ANACONDA:" ]] || export PATH="$HOME/$ANACONDA:$PATH"
+# Miniconda (due to bug not possible in .zprofile or .zshenv)
+MINICONDA='miniconda3/bin'
+if (( ${+WORK_DIR} )); then
+    [[ ":$PATH:" =~ ":$WORK_DIR/$MINICONDA:" ]] || \
+    export PATH="$WORK_DIR/$MINICONDA:$PATH"
+else
+    [[ ":$PATH:" =~ ":$HOME/$MINICONDA:" ]] || \
+    export PATH="$HOME/$MINICONDA:$PATH"
+fi
 
 # GPG keys
 export GPG_TTY=$(tty)
