@@ -103,7 +103,7 @@ else
     POSTEDIT=$'\e[0m'
 fi
 
-# Git
+# Git and execution time
 if [ $ZSH_IS_REQUIRED_VERSION = true ]; then
     setopt prompt_subst
     autoload -Uz vcs_info
@@ -123,8 +123,20 @@ $RED%a%f$WHITE]%f"
                 hook_com[unstaged]+="$RED??%f"
         fi
     }
-    precmd () { vcs_info }
-    RPROMPT='${vcs_info_msg_0_}'
+    GIT_INFO='${vcs_info_msg_0_}'
+    function preexec () {
+        TIME=$(($(date +%s%N) / 1000000))
+    }
+    function precmd () {
+        vcs_info
+        if [ $TIME ]; then
+            NOW=$(($(date +%s%N) / 1000000))
+            ELAPSED=$(($NOW - $TIME))
+            RPROMPT="$GIT_INFO $CYAN${ELAPSED}ms$RES"
+            unset TIME
+        fi
+    }
+    RPROMPT="$GIT_INFO"
 fi
 ###############################################################################
 
