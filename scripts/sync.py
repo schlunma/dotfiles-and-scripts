@@ -399,9 +399,9 @@ class Sync(object):
                 logging.info("%s synchronization between '%s' and '%s'",
                              prefix, self.this_host, target_host)
             else:
-                logging.warning("%s synchronization between '%s' and '%s' with"
-                                "error(s)", prefix, self.this_host,
-                                target_host)
+                logging.warning(
+                    "%s synchronization between '%s' and '%s' with error(s)",
+                    prefix, self.this_host, target_host)
             logging.info("")
 
         logging.debug("Finished synchronization script")
