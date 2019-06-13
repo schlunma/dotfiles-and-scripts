@@ -10,6 +10,7 @@
 " Settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let s:enable_ssh_features=!$SSH_SESSION
+let s:enable_jedi_vim=0
 let s:enable_git=s:enable_ssh_features
 let s:enable_syntastic=s:enable_ssh_features
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -50,7 +51,7 @@ if s:vim_is_required_version
     Plugin 'SirVer/ultisnips'
     Plugin 'honza/vim-snippets'
     Plugin 'tpope/vim-surround'
-    if has('python3')
+    if has('python3') && s:enable_jedi_vim
         Plugin 'davidhalter/jedi-vim'
     endif
     if s:enable_git
@@ -131,9 +132,11 @@ if s:vim_is_required_version
     let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
     " Jedi-vim
-    let g:jedi#use_splits_not_buffers="right"
-    let g:jedi#show_call_signatures="1"
-    let g:jedi#popup_select_first=0
+    if has('python3') && s:enable_jedi_vim
+        let g:jedi#use_splits_not_buffers="right"
+        let g:jedi#show_call_signatures="1"
+        let g:jedi#popup_select_first=0
+    endif
 endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
