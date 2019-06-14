@@ -70,25 +70,27 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Global basic settings (maybe overwritten in ftplugin)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-filetype plugin indent on   " Smarter indentation based on filetype
-syntax on                   " Enable syntax highlighting
-let mapleader=' '           " Set <leader> key to <space>
-set encoding=utf-8          " Use utf-8 encoding
-set shell=zsh               " Support zsh shell
-set expandtab               " Tabs = spaces
-set tabstop=4               " Tab length = 4 spaces
-set shiftwidth=4            " Determines range of <<, >> and ==
-set softtabstop=4           " Tab = 4 spaces
-set fileformat=unix         " Use unix fileformat
-set number                  " Show line numbers
-set cursorline              " Highlight current line
-set hlsearch                " Highlight search results
-set splitbelow              " Vertical split: below current window
-set splitright              " Horizontal split: right of current window
-set foldmethod=indent       " Fold using indents
-set foldnestmax=2           " Nest at most 2 levels when folding
-set foldlevel=2             " Start with no folds
-set background=dark         " Use dark background
+filetype plugin indent on               " Smarter indentation based on filetype
+syntax on                               " Enable syntax highlighting
+let mapleader=' '                       " Set <leader> key to <space>
+set encoding=utf-8                      " Use utf-8 encoding
+set shell=zsh                           " Support zsh shell
+set expandtab                           " Tabs = spaces
+set tabstop=4                           " Tab length = 4 spaces
+set shiftwidth=4                        " Determines range of <<, >> and ==
+set softtabstop=4                       " Tab = 4 spaces
+set fileformat=unix                     " Use unix fileformat
+set number                              " Show line numbers
+set cursorline                          " Highlight current line
+set hlsearch                            " Highlight search results
+set splitbelow                          " Vertical split: below
+set splitright                          " Horizontal split: right
+set foldmethod=indent                   " Fold using indents
+set foldnestmax=2                       " Nest at most 2 levels when folding
+set foldlevel=2                         " Start with no folds
+set background=dark                     " Use dark background
+set omnifunc=syntaxcomplete#Complete    " Omnicomplete
+set completeopt=longest,menuone         " Make completion menu more convenient
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -218,6 +220,12 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 nnoremap <C-I> <C-W>1W
+
+" Completion
+inoremap <expr> <C-N> pumvisible() ? '<C-N>' :
+  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr> <C-@> pumvisible() ? '<C-N>' :
+  \ '<C-X><C-O><C-N><C-P><C-R>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
 " Stop search highlighting
 nnoremap <silent> , :nohlsearch<Bar>:echo<CR>
