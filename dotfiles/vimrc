@@ -223,7 +223,7 @@ nnoremap <C-I> <C-W>1W
 
 " Completion
 inoremap <expr> <C-N> pumvisible() ? '<C-N>' :
-  \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+  \ '<C-N><C-R>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 inoremap <expr> <C-@> pumvisible() ? '<C-N>' :
   \ '<C-X><C-O><C-N><C-P><C-R>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
