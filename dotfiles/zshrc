@@ -188,14 +188,12 @@ UTF8='.UTF-8'
 [[ $LANG =~ $UTF8 ]] || export LANG="$LANG$UTF8"
 
 # Miniconda (due to bug not possible in .zprofile or .zshenv)
-MINICONDA='miniconda3/bin'
 if (( ${+WORK_DIR} )); then
-    [[ ":$PATH:" =~ ":$WORK_DIR/$MINICONDA:" ]] || \
-    export PATH="$WORK_DIR/$MINICONDA:$PATH"
+    MINICONDA="$WORK_DIR/miniconda3"
 else
-    [[ ":$PATH:" =~ ":$HOME/$MINICONDA:" ]] || \
-    export PATH="$HOME/$MINICONDA:$PATH"
+    MINICONDA="$HOME/miniconda3"
 fi
+[[ ":$PATH:" =~ ":$MINICONDA/bin:" ]] || export PATH="$MINICONDA/bin:$PATH"
 
 # GPG keys
 export GPG_TTY=$(tty)
