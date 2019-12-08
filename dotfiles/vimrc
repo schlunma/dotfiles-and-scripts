@@ -48,9 +48,11 @@ if s:vim_is_required_version
     Plugin 'tmhedberg/SimpylFold'
     Plugin 'vim-scripts/indentpython.vim'
     Plugin 'nathanaelkane/vim-indent-guides'
-    Plugin 'SirVer/ultisnips'
     Plugin 'honza/vim-snippets'
     Plugin 'tpope/vim-surround'
+    if has('python')
+        Plugin 'SirVer/ultisnips'
+    endif
     if has('python3') && s:enable_jedi_vim
         Plugin 'davidhalter/jedi-vim'
     endif
@@ -129,9 +131,11 @@ if s:vim_is_required_version
     let g:SimpylFold_docstring_preview=1
 
     " Snippets
-    let g:UltiSnipsExpandTrigger="<tab>"
-    let g:UltiSnipsJumpForwardTrigger="<c-b>"
-    let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+    if has('python')
+        let g:UltiSnipsExpandTrigger="<tab>"
+        let g:UltiSnipsJumpForwardTrigger="<c-b>"
+        let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+    endif
 
     " Jedi-vim
     if has('python3') && s:enable_jedi_vim
