@@ -168,8 +168,12 @@ alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
-alias sq='squeue -l -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M \
-%.12l %.6D  %R"'
+alias scompute='salloc --partition=compute --exclusive --nodes=1 --mem=0 \
+--time=08:00:00 --account bd1083'
+alias sprepost='salloc --partition=prepost --exclusive --nodes=1 --mem=0 \
+--time=12:00:00 --account bd1083'
+alias sq='squeue -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l \
+%.6D  %R"'
 if command -v 'checkssh' &>/dev/null; then
     alias git='checkssh; git'
     alias rsync='checkssh; rsync -aP'
