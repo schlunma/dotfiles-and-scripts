@@ -168,6 +168,8 @@ alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
+alias jl='start-jupyter -A bd1083 -c lab -i jupyter-preload -p prepost \
+-t 12:00:00 -u b309141'
 alias scompute='salloc --partition=compute --exclusive --nodes=1 --mem=0 \
 --time=08:00:00 --account bd1083'
 alias sprepost='salloc --partition=prepost --exclusive --nodes=1 --mem=0 \
