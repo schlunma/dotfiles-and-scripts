@@ -163,19 +163,14 @@ bindkey '^[[4~' end-of-line
 ###############################################################################
 # Aliases
 ###############################################################################
+# Shell
 alias cd..='cd ..'
 alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
-alias jl='start-jupyter -A bd1083 -c lab -i jupyter-preload -p prepost \
--t 12:00:00 -u b309141'
-alias scompute='salloc --partition=compute --exclusive --nodes=1 --mem=0 \
---time=08:00:00 --account bd1083'
-alias sprepost='salloc --partition=prepost --exclusive --nodes=1 --mem=0 \
---time=12:00:00 --account bd1083'
-alias sq='squeue -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l \
-%.6D  %R"'
+
+# SSH
 if command -v 'checkssh' &>/dev/null; then
     alias git='checkssh; git'
     alias rsync='checkssh; rsync -aP'
@@ -183,6 +178,17 @@ if command -v 'checkssh' &>/dev/null; then
 else
     alias rsync='rsync -aP'
 fi
+
+# DKRZ
+ACCOUNT=bd1179
+alias jl="start-jupyter -A $ACCOUNT -c lab -i jupyter-preload -p prepost \
+-t 12:00:00 -u b309141"
+alias scompute="salloc --partition=compute --exclusive --nodes=1 --mem=0 \
+--time=08:00:00 --account $ACCOUNT"
+alias sprepost="salloc --partition=prepost --exclusive --nodes=1 --mem=0 \
+--time=12:00:00 --account $ACCOUNT"
+alias sq='squeue -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l \
+%.6D  %R"'
 ###############################################################################
 
 
