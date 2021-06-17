@@ -224,21 +224,27 @@ ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
 ###############################################################################
 # Lines configured by conda init (slightly altered)
 ###############################################################################
+# Find miniconda installation
 if (( ${+WORK_DIR} )); then
     MINICONDA="$WORK_DIR/miniconda3"
 else
     MINICONDA="$HOME/miniconda3"
 fi
-__conda_setup=`$MINICONDA/bin/conda shell.zsh hook 2>/dev/null`
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "$MINICONDA/etc/profile.d/conda.sh" ]; then
-        . "$MINICONDA/etc/profile.d/conda.sh"
+
+# Only run conda init script if no environment is currently active
+# This is necessary to keep an activated environment active when starting tmux
+if (( ! ${+CONDA_DEFAULT_ENV} )); then
+    __conda_setup=`$MINICONDA/bin/conda shell.zsh hook 2>/dev/null`
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
     else
-        [[ ":$PATH:" =~ ":$MINICONDA/bin:" ]] || \
-            export PATH="$MINICONDA/bin:$PATH"
+        if [ -f "$MINICONDA/etc/profile.d/conda.sh" ]; then
+            . "$MINICONDA/etc/profile.d/conda.sh"
+        else
+            [[ ":$PATH:" =~ ":$MINICONDA/bin:" ]] || \
+                export PATH="$MINICONDA/bin:$PATH"
+        fi
     fi
+    unset __conda_setup
 fi
-unset __conda_setup
 ###############################################################################
