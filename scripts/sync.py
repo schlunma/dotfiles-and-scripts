@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Easy SSH synchronization
-# Copyright (c) 2018 Manuel Schlund <schlunma@gmail.com>
+# Copyright (c) 2021 Manuel Schlund <schlunma@gmail.com>
 # Licensed under the GNU General Public License 3 (or later).
 
 
@@ -75,7 +75,7 @@ class Sync(object):
     _PATH = '_PATH'
     _ALIASES = 'ALIASES'
     _NAME = 'Easy SSH synchronization'
-    _COPYRIGHT = 'Copyright (c) 2018 Manuel Schlund <schlunma@gmail.com>'
+    _COPYRIGHT = 'Copyright (c) 2021 Manuel Schlund <schlunma@gmail.com>'
     _DELIMITER = 50 * '-'
 
     def __init__(self):
