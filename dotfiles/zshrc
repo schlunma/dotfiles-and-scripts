@@ -15,25 +15,6 @@
 
 
 ###############################################################################
-# Minimal required zsh version for complex features
-###############################################################################
-ZSH_VERSION_ARRAY=(${(s/./)ZSH_VERSION})
-ZSH_REQUIRED_VERSION=(4 3 11)
-ZSH_IS_REQUIRED_VERSION=true
-for (( i=1; i<=$#ZSH_VERSION_ARRAY; i++ )) do
-    if [[ $ZSH_VERSION_ARRAY[i] -gt ZSH_REQUIRED_VERSION[i] ]]; then
-        ZSH_IS_REQUIRED_VERSION=true
-        break
-    elif [[ $ZSH_VERSION_ARRAY[i] -lt ZSH_REQUIRED_VERSION[i] ]]; then
-        ZSH_IS_REQUIRED_VERSION=false
-        break
-    fi
-done
-###############################################################################
-
-
-
-###############################################################################
 # Check if session is SSH session and start gpg-agent if necessary
 ###############################################################################
 if (( ${+SSH_CLIENT} )) || (( ${+SSH_TTY} )); then
@@ -94,50 +75,42 @@ WHITE='%F{fg}%B'
 GRAY='%F{fg}'
 RES='%f%b'
 autoload -Uz colors && colors
-if [ $ZSH_IS_REQUIRED_VERSION = true ]; then
-    PROMPT="$WHITE%*$RES $RED%n$RES$GRAY@$RES$CYAN%m$RES \
+PROMPT="$WHITE%*$RES $RED%n$RES$GRAY@$RES$CYAN%m$RES \
 $ORANGE%~ "$'\n'"       > $RES"
-else
-    PROMPT="%* %{$fg_bold[red]%}%n%{$reset_color%}@%{$fg_bold[cyan]%}%m \
-%{$fg_bold[yellow]%}%~ "$'\n'"       > %{$reset_color%}%{$fg_bold[green]%}"
-    POSTEDIT=$'\e[0m'
-fi
 
 # Git and execution time
-if [ $ZSH_IS_REQUIRED_VERSION = true ]; then
-    setopt prompt_subst
-    autoload -Uz vcs_info
-    zstyle ':vcs_info:*' stagedstr 'M'
-    zstyle ':vcs_info:*' unstagedstr 'M'
-    zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' formats "$WHITE [%f$GREEN%b%f$WHITE]%f \
+setopt prompt_subst
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' stagedstr 'M'
+zstyle ':vcs_info:*' unstagedstr 'M'
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' formats "$WHITE [%f$GREEN%b%f$WHITE]%f \
 $GREEN%c%f$ORANGE%u%f"
-    zstyle ':vcs_info:*' actionformats "$WHITE [%f$GREEN%b%f$WHITE|%f\
+zstyle ':vcs_info:*' actionformats "$WHITE [%f$GREEN%b%f$WHITE|%f\
 $RED%a%f$WHITE]%f"
-    zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
-    zstyle ':vcs_info:*' enable git
-    +vi-git-untracked() {
-        if [[ $("git" rev-parse --is-inside-work-tree 2>/dev/null) == \
-            'true' ]] && [[ $("git" ls-files --other --directory \
-            --exclude-standard | sed q | wc -l | tr -d ' ') == 1 ]] ; then
-                hook_com[unstaged]+="$RED??%f"
-        fi
-    }
-    GIT_INFO='${vcs_info_msg_0_}'
-    function preexec () {
-        TIME=$(($(date +%s%N) / 1000000))
-    }
-    function precmd () {
-        vcs_info
-        if [ $TIME ]; then
-            NOW=$(($(date +%s%N) / 1000000))
-            ELAPSED=$(($NOW - $TIME))
-            RPROMPT="$GIT_INFO $CYAN${ELAPSED}ms$RES"
-            unset TIME
-        fi
-    }
-    RPROMPT="$GIT_INFO"
-fi
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
+zstyle ':vcs_info:*' enable git
++vi-git-untracked() {
+    if [[ $("git" rev-parse --is-inside-work-tree 2>/dev/null) == \
+        'true' ]] && [[ $("git" ls-files --other --directory \
+        --exclude-standard | sed q | wc -l | tr -d ' ') == 1 ]] ; then
+            hook_com[unstaged]+="$RED??%f"
+    fi
+}
+GIT_INFO='${vcs_info_msg_0_}'
+function preexec () {
+    TIME=$(($(date +%s%N) / 1000000))
+}
+function precmd () {
+    vcs_info
+    if [ $TIME ]; then
+        NOW=$(($(date +%s%N) / 1000000))
+        ELAPSED=$(($NOW - $TIME))
+        RPROMPT="$GIT_INFO $CYAN${ELAPSED}ms$RES"
+        unset TIME
+    fi
+}
+RPROMPT="$GIT_INFO"
 ###############################################################################
 
 
@@ -210,42 +183,40 @@ export GPG_TTY=$(tty)
 # Plugins
 ###############################################################################
 # Load plugins
-if [ $ZSH_IS_REQUIRED_VERSION = true ]; then
-    ZPLUGINS="$HOME/.zplugins"
-    source $ZPLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-    source $ZPLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZPLUGINS="$HOME/.zplugins"
+source $ZPLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $ZPLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-    # Plugin settings
-    bindkey '^ ' autosuggest-accept
-    ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
-    ZSH_HIGHLIGHT_STYLES[default]="fg=fg,bold"
-    ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=red,bold"
-    ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=yellow,bold"
-    ZSH_HIGHLIGHT_STYLES[arg0]="fg=magenta,bold"
-    ZSH_HIGHLIGHT_STYLES[alias]="fg=green,bold"
-    ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=green,bold"
-    ZSH_HIGHLIGHT_STYLES[builtin]="fg=green,bold"
-    ZSH_HIGHLIGHT_STYLES[function]="fg=green"
-    ZSH_HIGHLIGHT_STYLES[command]="fg=green,bold"
-    ZSH_HIGHLIGHT_STYLES[precommand]="fg=green,bold,underline"
-    ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=yellow,bold"
-    ZSH_HIGHLIGHT_STYLES[redirection]="fg=yellow,bold"
-    ZSH_HIGHLIGHT_STYLES[hashed-command]="fg=green,bold"
-    ZSH_HIGHLIGHT_STYLES[path]="fg=fg,bold,underline"
-    ZSH_HIGHLIGHT_STYLES[globbing]="fg=yellow,bold"
-    ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=magenta,bold"
-    ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=cyan,bold"
-    ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=cyan,bold"
-    ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=magenta,bold"
-    ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=yellow"
-    ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=yellow"
-    ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=yellow"
-    ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]="fg=cyan"
-    ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]="fg=cyan"
-    ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=cyan"
-    ZSH_HIGHLIGHT_STYLES[rc-quote]="fg=cyan"
-    ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
-fi
+# Plugin settings
+bindkey '^ ' autosuggest-accept
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+ZSH_HIGHLIGHT_STYLES[default]="fg=fg,bold"
+ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=red,bold"
+ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[arg0]="fg=magenta,bold"
+ZSH_HIGHLIGHT_STYLES[alias]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[builtin]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[function]="fg=green"
+ZSH_HIGHLIGHT_STYLES[command]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[precommand]="fg=green,bold,underline"
+ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[redirection]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[hashed-command]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[path]="fg=fg,bold,underline"
+ZSH_HIGHLIGHT_STYLES[globbing]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=magenta,bold"
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=cyan,bold"
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=cyan,bold"
+ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=magenta,bold"
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=yellow"
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=yellow"
+ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=yellow"
+ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[rc-quote]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
 ###############################################################################
 
 
