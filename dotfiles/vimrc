@@ -21,6 +21,7 @@ Plugin 'morhetz/gruvbox'
 Plugin 'preservim/nerdcommenter'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'tpope/vim-surround'
+Plugin 'vim-scripts/indentpython.vim'
 call vundle#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
