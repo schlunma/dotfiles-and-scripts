@@ -153,13 +153,12 @@ else
 fi
 
 # DKRZ
-ACCOUNT=bd1179
-alias jl="start-jupyter -A $ACCOUNT -c lab -i jupyter-preload -p prepost \
--t 12:00:00 -u b309141"
+alias jl="start-jupyter -A $SLURM_ACCOUNT -c lab -i jupyter-preload \
+-p prepost -t 12:00:00 -u $USER"
 alias scompute="salloc --partition=compute --exclusive --nodes=1 --mem=0 \
---time=08:00:00 --account $ACCOUNT"
+--time=08:00:00"
 alias sprepost="salloc --partition=prepost --exclusive --nodes=1 --mem=0 \
---time=12:00:00 --account $ACCOUNT"
+--time=12:00:00"
 alias sq='squeue -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l \
 %.6D  %R"'
 ###############################################################################
