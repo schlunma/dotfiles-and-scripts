@@ -152,9 +152,7 @@ else
     alias rsync='rsync -aP'
 fi
 
-# DKRZ
-alias jl="start-jupyter -A $SLURM_ACCOUNT -c lab -i jupyter-preload \
--p prepost -t 12:00:00 -u $USER"
+# SLURM
 alias scompute="salloc --partition=compute --exclusive --nodes=1 --mem=0 \
 --time=08:00:00"
 alias sprepost="salloc --partition=prepost --exclusive --nodes=1 --mem=0 \
