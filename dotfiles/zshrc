@@ -152,6 +152,10 @@ else
     alias rsync='rsync -aP'
 fi
 
+# Git
+alias diffall='git diff --name-only main | xargs echo'
+alias diffpy='git diff --name-only main | grep ".py" | xargs echo'
+
 # SLURM
 alias scompute="salloc --partition=compute --exclusive --nodes=1 --mem=0 \
 --time=08:00:00"
