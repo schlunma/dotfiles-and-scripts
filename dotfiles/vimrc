@@ -86,6 +86,10 @@ let g:SimpylFold_docstring_preview=1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Advanced settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Auto-format comments (add comment leader after <Enter>, not after <o>)
+set formatoptions+=r
+set formatoptions-=o
+
 " Colorscheme
 colorscheme gruvbox
 
@@ -135,7 +139,7 @@ set statusline+=\ 0x%04B                                    " Current character
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Map <Esc> key to jk or kj combination
+" Map <Esc> to <jk> or <kj>
 inoremap jk <Esc>
 inoremap kj <Esc>
 
