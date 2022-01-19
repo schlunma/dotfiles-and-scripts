@@ -42,6 +42,7 @@ set softtabstop=4                       " Tab = 4 spaces
 set fileformat=unix                     " Use unix fileformat
 set number                              " Show line numbers
 set cursorline                          " Highlight current line
+set cursorcolumn                        " Highlight current column
 set hlsearch                            " Highlight search results
 set splitbelow                          " Vertical split: below
 set splitright                          " Horizontal split: right
@@ -64,8 +65,11 @@ augroup OpenNERDTree
     autocmd VimEnter * NERDTree
     autocmd VimEnter * wincmd l
 augroup END
-autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTree') &&
-    \ b:NERDTree.isTabTree()) | q | endif
+augroup QuitIfNERDTreeLastBuffer
+    autocmd!
+    autocmd bufenter * if (winnr('$') == 1 && exists('b:NERDTree') &&
+        \ b:NERDTree.isTabTree()) | q | endif
+augroup END
 
 " Gruvbox
 let g:gruvbox_contrast_dark='hard'
@@ -101,14 +105,19 @@ highlight PmenuSel ctermbg=Darkgrey ctermfg=None
 highlight StatusLine ctermfg=Darkgrey
 
 " Highlight ncl syntax
-autocmd BufRead,BufNewFile *.ncl set filetype=ncl
-autocmd! Syntax newlang source $VIM/ncl.vim
+augroup HighlightNCL
+    autocmd!
+    autocmd BufRead,BufNewFile *.ncl set filetype=ncl
+    autocmd! Syntax newlang source $VIM/ncl.vim
+augroup END
 
 " Highlighting yaml files is really slow with standard regexp engine
 set regexpengine=1
 
 " Highlight tabs and trailing whitespace
-autocmd VimEnter,WinEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+augroup HighlightTrailingWhitespace
+    autocmd VimEnter,WinEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+augroup END
 set list
 set listchars=tab:>-
 
@@ -116,8 +125,16 @@ set listchars=tab:>-
 if exists('+colorcolumn')
     set colorcolumn=80
 else
-    autocmd BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>79v.\+', -1)
+    augroup HighlightColumn80
+        autocmd BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>79v.\+', -1)
+    augroup END
 endif
+
+" Start/stop highlighting current cursor postition when entering/leaving pane
+augroup HighlightCursorPositionOnEnter
+    autocmd WinLeave * set nocursorline nocursorcolumn
+    autocmd WinEnter * set cursorline cursorcolumn
+augroup END
 
 " Statusbar
 set laststatus=2
