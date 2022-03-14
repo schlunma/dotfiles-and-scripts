@@ -116,6 +116,7 @@ set regexpengine=1
 
 " Highlight tabs and trailing whitespace
 augroup HighlightTrailingWhitespace
+    autocmd!
     autocmd VimEnter,WinEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 augroup END
 set list
@@ -126,12 +127,14 @@ if exists('+colorcolumn')
     set colorcolumn=80
 else
     augroup HighlightColumn80
+        autocmd!
         autocmd BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>79v.\+', -1)
     augroup END
 endif
 
 " Start/stop highlighting current cursor postition when entering/leaving pane
 augroup HighlightCursorPositionOnEnter
+    autocmd!
     autocmd WinLeave * set nocursorline nocursorcolumn
     autocmd WinEnter * set cursorline cursorcolumn
 augroup END
