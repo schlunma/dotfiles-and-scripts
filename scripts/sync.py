@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # Easy SSH synchronization
-# Copyright (c) 2021 Manuel Schlund <schlunma@gmail.com>
-# Licensed under the GNU General Public License 3 (or later).
+# Copyright (c) 2022 Manuel Schlund <schlunma@gmail.com>
+# Licensed under the GNU General Public License v3.0 (or later).
 
 
 """Easy synchronization between different hosts using SSH.

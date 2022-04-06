@@ -1,28 +1,33 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Configuration file for VIM
-" Copyright (c) 2021 Manuel Schlund <schlunma@gmail.com>
+" Copyright (c) 2022 Manuel Schlund <schlunma@gmail.com>
 " Licensed under the GNU General Public License v3.0 (or later).
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Setup Vundle
+" Setup vim-plug
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
+let data_dir=has('nvim') ? stdpath('data').'/site' : '~/.vim'
+let https='https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+let cmd='!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs '.https
+if empty(glob(data_dir . '/autoload/plug.vim'))
+    silent execute cmd
+    augroup PlugInstall
+        autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    augroup END
+endif
 
 " Load plugins
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'preservim/nerdtree'
-Plugin 'morhetz/gruvbox'
-Plugin 'preservim/nerdcommenter'
-Plugin 'tmhedberg/SimpylFold'
-Plugin 'tpope/vim-surround'
-Plugin 'vim-scripts/indentpython.vim'
-call vundle#end()
+call plug#begin()
+Plug 'preservim/nerdtree'
+Plug 'morhetz/gruvbox'
+Plug 'preservim/nerdcommenter'
+Plug 'tmhedberg/SimpylFold'
+Plug 'tpope/vim-surround'
+Plug 'vim-scripts/indentpython.vim'
+call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -33,6 +38,7 @@ call vundle#end()
 filetype plugin indent on               " Smarter indentation based on filetype
 syntax on                               " Enable syntax highlighting
 let mapleader=' '                       " Set <leader> key to <space>
+set nocompatible                        " Necesary for lots of cool vim things
 set encoding=utf-8                      " Use utf-8 encoding
 set shell=zsh                           " Support zsh shell
 set expandtab                           " Tabs = spaces
@@ -191,5 +197,5 @@ vnoremap <silent> <leader>s :sort i<CR>
 nnoremap <silent> <leader>p Vip:sort i<CR>
 
 " Add license
-nnoremap <leader>lg :read $HOME/.vim/templates/GPLv3.rst<CR>
+nnoremap <silent> <leader>lg :read $HOME/.vim/templates/GPLv3.rst<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
