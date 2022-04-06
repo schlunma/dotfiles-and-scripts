@@ -157,9 +157,9 @@ alias diffall='git diff --name-only main | xargs echo'
 alias diffpy='git diff --name-only main | grep ".py" | xargs echo'
 
 # SLURM
-alias scompute="salloc --partition=compute --exclusive --nodes=1 --mem=0 \
+alias scompute="salloc --x11 --partition=compute --exclusive --nodes=1 \
 --time=08:00:00"
-alias sprepost="salloc --partition=prepost --exclusive --nodes=1 --mem=0 \
+alias sinter="salloc --x11 --partition=interactive --exclusive --nodes=1 \
 --time=12:00:00"
 alias sq='squeue -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l \
 %.6D  %R"'
@@ -232,9 +232,10 @@ else
     MAMBAFORGE="$HOME/mambaforge"
 fi
 
-# Only run conda init script if no environment is currently active
-# This is necessary to keep an activated environment active when starting tmux
-if (( ! ${+CONDA_DEFAULT_ENV} )); then
+# Only run conda init script if this file is not initialized from a tmux
+# session (this is necessary to keep an activated environment active when
+# starting tmux)
+if (( ! ${+TMUX} )); then
     __conda_setup=`$MAMBAFORGE/bin/conda shell.zsh hook 2> /dev/null`
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
