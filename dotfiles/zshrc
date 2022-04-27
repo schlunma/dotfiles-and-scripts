@@ -157,9 +157,9 @@ alias diffall='git diff --name-only main | xargs echo'
 alias diffpy='git diff --name-only main | grep ".py" | xargs echo'
 
 # SLURM
-alias scompute="salloc --x11 --partition=compute --exclusive --nodes=1 \
+alias scompute="salloc --x11 --partition=compute --nodes=1 --mem=0 \
 --time=08:00:00"
-alias sinter="salloc --x11 --partition=interactive --exclusive --nodes=1 \
+alias sinter="salloc --x11 --partition=interactive --nodes=1 --mem=32G \
 --time=12:00:00"
 alias sq='squeue -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l \
 %.6D  %R"'
