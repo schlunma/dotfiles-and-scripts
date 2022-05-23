@@ -227,9 +227,9 @@ ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
 ###############################################################################
 # Find mambaforge installation
 if (( ${+WORK_DIR} )); then
-    MAMBAFORGE="$WORK_DIR/mambaforge"
+    export MAMBAFORGE="$WORK_DIR/mambaforge"
 else
-    MAMBAFORGE="$HOME/mambaforge"
+    export MAMBAFORGE="$HOME/mambaforge"
 fi
 
 # Only run conda init script if this file is not initialized from a tmux
