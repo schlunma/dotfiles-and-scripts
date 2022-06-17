@@ -174,7 +174,7 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-nnoremap <C-I> <C-W>1W
+nnoremap <C-P> <C-W>1W
 
 " Completion
 inoremap <expr> <C-N> pumvisible() ? '<C-N>' :
@@ -185,7 +185,7 @@ inoremap <expr> <C-@> pumvisible() ? '<C-N>' :
 " Stop search highlighting
 nnoremap <silent> , :nohlsearch<Bar>:echo<CR>
 
-" Replace visual selection by <C-r>
+" Replace visual selection by <C-R>
 vnoremap <C-R> "hy:%s/<C-R>h//gc<left><left><left>
 
 " Remove trailing whitespace
