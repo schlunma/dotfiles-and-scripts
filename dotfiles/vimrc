@@ -174,7 +174,7 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-nnoremap <C-P> <C-W>1W
+nnoremap <C-I> <C-W>1W
 
 " Completion
 inoremap <expr> <C-N> pumvisible() ? '<C-N>' :
