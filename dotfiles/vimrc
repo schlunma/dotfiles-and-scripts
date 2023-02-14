@@ -169,6 +169,10 @@ set statusline+=\ 0x%04B                                    " Current character
 inoremap jk <Esc>
 inoremap kj <Esc>
 
+" Move back (ö) an forth (ä)
+nnoremap <char-246> <C-O>
+nnoremap <char-228> <C-I>
+
 " Easier split navigations
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
