@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Cache SSH key if necessary
-# Copyright (c) 2021 Manuel Schlund <schlunma@gmail.com>
+# Copyright (c) 2023 Manuel Schlund <schlunma@gmail.com>
 # Licensed under the GNU General Public License v3.0 (or later).
 
 
