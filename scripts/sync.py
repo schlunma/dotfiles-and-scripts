@@ -74,6 +74,7 @@ class Sync():
     _DEFAULT_CONFIGFILE = '~/.sync.yml'
     _DEFAULT_EXCLUDE = '--exclude="*.swp" '
     _DEFAULT_LOGFILE = '~/.sync.log'
+    _DEFAULT_NTASKS = 12
     _DELIMITER = 50 * '-'
     _LOG_FORMATTER = logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s'
@@ -559,7 +560,7 @@ class Sync():
             '-N',
             '--ntasks',
             type=int,
-            default=16,
+            default=self._DEFAULT_NTASKS,
             help="Maximum number of concurrently run synchronization tasks",
         )
 
