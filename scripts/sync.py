@@ -74,7 +74,7 @@ class Sync():
     _DEFAULT_CONFIGFILE = '~/.sync.yml'
     _DEFAULT_EXCLUDE = '--exclude="*.swp" '
     _DEFAULT_LOGFILE = '~/.sync.log'
-    _DEFAULT_NTASKS = 12
+    _DEFAULT_NTASKS = 8
     _DELIMITER = 50 * '-'
     _LOG_FORMATTER = logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s'
