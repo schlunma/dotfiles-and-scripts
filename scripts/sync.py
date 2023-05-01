@@ -98,9 +98,7 @@ class Sync():
         (self.this_host, self.target_hosts) = self._get_hosts()
         self.sync_command: str = self._get_sync_command()
 
-        # Limit number of concurrent tasks
-        # see https://docs.python.org/3/library/asyncio-sync.html#semaphore
-        self.semamphore = asyncio.Semaphore(self.args.ntasks)
+        self.semaphores = self._get_semaphores()
 
     def _get_hosts(self) -> tuple[str, list[str]]:
         """Get correct host names (according to the configuration file)."""
@@ -237,7 +235,10 @@ class Sync():
 
         # Initialize synchronization task
         logging.debug("    Initializing command '%s'", command_str)
-        async with self.semamphore:
+
+        # Limit number of concurrent tasks
+        # see https://docs.python.org/3/library/asyncio-sync.html#semaphore
+        async with self.semaphores[target_host][direction]:
             process = await asyncio.create_subprocess_shell(
                 command_str, stdout=subprocess.PIPE, stderr=subprocess.PIPE
             )
@@ -245,6 +246,16 @@ class Sync():
 
         result = (src, dest, out[0].decode('utf-8'), out[1].decode('utf-8'))
         return result
+
+    def _get_semaphores(self) -> dict:
+        """Get semaphore for each event loop."""
+        semaphores = {
+            host: {
+                'up': asyncio.Semaphore(self.args.ntasks),
+                'down': asyncio.Semaphore(self.args.ntasks),
+            } for host in self.target_hosts
+        }
+        return semaphores
 
     def _get_sync_command(self) -> str:
         """Get synchronization command."""
@@ -393,7 +404,7 @@ class Sync():
             self._PRE_COMMAND.replace('\n', ' '),
         )
         self.logger.info(
-            "Running at most %d concurrent tasks", self.args.ntasks
+            "Running at most %d concurrent task(s)", self.args.ntasks
         )
         pre_comm = subprocess.Popen(
             self._PRE_COMMAND,
