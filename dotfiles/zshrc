@@ -176,6 +176,9 @@ UTF8='.UTF-8'
 
 # GPG keys
 export GPG_TTY=$(tty)
+
+# Make sure that $HOME/bin is in $PATH
+[[ ":$PATH:" =~ ":$HOME/bin:" ]] || export PATH="$HOME/bin:$PATH"
 ###############################################################################
 
 
