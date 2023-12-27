@@ -228,31 +228,31 @@ ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
 ###############################################################################
 # Lines configured by mamba init (slightly altered)
 ###############################################################################
-# Find mambaforge installation
+# Find miniforge installation
 if (( ${+WORK_DIR} )); then
-    export MAMBAFORGE="$WORK_DIR/mambaforge"
+    export MINIFORGE="$WORK_DIR/miniforge3"
 else
-    export MAMBAFORGE="$HOME/mambaforge"
+    export MINIFORGE="$HOME/miniforge3"
 fi
 
 # Only run conda init script if this file is not initialized from a tmux
 # session (this is necessary to keep an activated environment active when
 # starting tmux)
 if (( ! ${+TMUX} )); then
-    __conda_setup=`$MAMBAFORGE/bin/conda shell.zsh hook 2> /dev/null`
+    __conda_setup=`$MINIFORGE/bin/conda shell.zsh hook 2> /dev/null`
     if [ $? -eq 0 ]; then
         eval "$__conda_setup"
     else
-        if [ -f "$MAMBAFORGE/etc/profile.d/conda.sh" ]; then
-            . "$MAMBAFORGE/etc/profile.d/conda.sh"
+        if [ -f "$MINIFORGE/etc/profile.d/conda.sh" ]; then
+            . "$MINIFORGE/etc/profile.d/conda.sh"
         else
-            [[ ":$PATH:" =~ ":$MAMBAFORGE/bin:" ]] || \
-                export PATH="$MAMBAFORGE/bin:$PATH"
+            [[ ":$PATH:" =~ ":$MINIFORGE/bin:" ]] || \
+                export PATH="$MINIFORGE/bin:$PATH"
         fi
     fi
     unset __conda_setup
-    if [ -f "$MAMBAFORGE/etc/profile.d/mamba.sh" ]; then
-        . "$MAMBAFORGE/etc/profile.d/mamba.sh"
+    if [ -f "$MINIFORGE/etc/profile.d/mamba.sh" ]; then
+        . "$MINIFORGE/etc/profile.d/mamba.sh"
     fi
 fi
 ###############################################################################
