@@ -33,10 +33,10 @@ fi
 ###############################################################################
 # Lines configured by zsh-newuser-install
 ###############################################################################
-HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
-setopt appendhistory autocd beep nomatch notify
+HISTFILE=~/.zsh_history
+HISTSIZE=999999999
+SAVEHIST=999999999
+setopt appendhistory autocd beep nomatch notify hist_ignore_all_dups
 unsetopt extendedglob
 bindkey -v
 ###############################################################################
