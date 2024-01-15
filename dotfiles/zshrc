@@ -76,7 +76,7 @@ GRAY='%F{fg}'
 RES='%f%b'
 autoload -Uz colors && colors
 PROMPT="$WHITE%*$RES $RED%n$RES$GRAY@$RES$CYAN%m$RES \
-$ORANGE%~ "$'\n'"       > $RES"
+$ORANGE%~ "$'\n'"       $ $RES"
 
 # Git and execution time
 setopt prompt_subst
