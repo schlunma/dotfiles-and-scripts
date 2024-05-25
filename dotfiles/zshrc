@@ -1,6 +1,6 @@
 ###############################################################################
 # Configuration file for ZSH
-# Copyright (c) 2023 Manuel Schlund <schlunma@gmail.com>
+# Copyright (c) 2024 Manuel Schlund <schlunma@gmail.com>
 # Licensed under the GNU General Public License v3.0 (or later).
 ###############################################################################
 
@@ -57,7 +57,6 @@ compinit
 # Basic settings
 ###############################################################################
 KEYTIMEOUT=1                            # Timeout in ZLE mode
-autoload -Uz compinit && compinit       # Autocomplete
 zstyle ':completion:*' menu select
 ###############################################################################
 
@@ -185,48 +184,6 @@ export GPG_TTY=$(tty)
 
 
 ###############################################################################
-# Plugins
-###############################################################################
-# Load plugins
-ZPLUGINS="$HOME/.zplugins"
-source $ZPLUGINS/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $ZPLUGINS/zsh-autosuggestions/zsh-autosuggestions.zsh
-
-# Plugin settings
-bindkey '^ ' autosuggest-accept
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
-ZSH_HIGHLIGHT_STYLES[default]="fg=fg,bold"
-ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=red,bold"
-ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=yellow,bold"
-ZSH_HIGHLIGHT_STYLES[arg0]="fg=magenta,bold"
-ZSH_HIGHLIGHT_STYLES[alias]="fg=green,bold"
-ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=green,bold"
-ZSH_HIGHLIGHT_STYLES[builtin]="fg=green,bold"
-ZSH_HIGHLIGHT_STYLES[function]="fg=green"
-ZSH_HIGHLIGHT_STYLES[command]="fg=green,bold"
-ZSH_HIGHLIGHT_STYLES[precommand]="fg=green,bold,underline"
-ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=yellow,bold"
-ZSH_HIGHLIGHT_STYLES[redirection]="fg=yellow,bold"
-ZSH_HIGHLIGHT_STYLES[hashed-command]="fg=green,bold"
-ZSH_HIGHLIGHT_STYLES[path]="fg=fg,bold,underline"
-ZSH_HIGHLIGHT_STYLES[globbing]="fg=yellow,bold"
-ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=magenta,bold"
-ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=cyan,bold"
-ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=cyan,bold"
-ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=magenta,bold"
-ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=yellow"
-ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=yellow"
-ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=yellow"
-ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]="fg=cyan"
-ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]="fg=cyan"
-ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=cyan"
-ZSH_HIGHLIGHT_STYLES[rc-quote]="fg=cyan"
-ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
-###############################################################################
-
-
-
-###############################################################################
 # Lines configured by mamba init (slightly altered)
 ###############################################################################
 # Find miniforge installation
@@ -256,4 +213,70 @@ if (( ! ${+TMUX} )); then
         . "$MINIFORGE/etc/profile.d/mamba.sh"
     fi
 fi
+###############################################################################
+
+
+
+###############################################################################
+# Lines added by zinit's installer
+###############################################################################
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \
+        print -P "%F{160} The clone has failed.%f%b"
+fi
+
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light zdharma-continuum/zinit-annex-as-monitor
+zinit light zdharma-continuum/zinit-annex-bin-gem-node
+zinit light zdharma-continuum/zinit-annex-patch-dl
+zinit light zdharma-continuum/zinit-annex-rust
+###############################################################################
+
+
+
+###############################################################################
+# Plugins
+###############################################################################
+# Load plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-autosuggestions
+
+# Plugin settings
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+ZSH_HIGHLIGHT_STYLES[default]="fg=fg,bold"
+ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=red,bold"
+ZSH_HIGHLIGHT_STYLES[reserved-word]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[arg0]="fg=magenta,bold"
+ZSH_HIGHLIGHT_STYLES[alias]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[builtin]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[function]="fg=green"
+ZSH_HIGHLIGHT_STYLES[command]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[precommand]="fg=green,bold,underline"
+ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[redirection]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[hashed-command]="fg=green,bold"
+ZSH_HIGHLIGHT_STYLES[path]="fg=fg,bold,underline"
+ZSH_HIGHLIGHT_STYLES[globbing]="fg=yellow,bold"
+ZSH_HIGHLIGHT_STYLES[history-expansion]="fg=magenta,bold"
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]="fg=cyan,bold"
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]="fg=cyan,bold"
+ZSH_HIGHLIGHT_STYLES[back-quoted-argument]="fg=magenta,bold"
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=yellow"
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=yellow"
+ZSH_HIGHLIGHT_STYLES[dollar-quoted-argument]="fg=yellow"
+ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[rc-quote]="fg=cyan"
+ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
+bindkey '^ ' autosuggest-accept
 ###############################################################################
