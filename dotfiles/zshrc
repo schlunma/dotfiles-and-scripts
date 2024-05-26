@@ -123,18 +123,7 @@ RPROMPT="$GIT_INFO"
 ###############################################################################
 # Keybindings (vim-like configuration)
 ###############################################################################
-bindkey '^P'    up-history
-bindkey '^N'    down-history
-bindkey '^?'    backward-delete-char
-bindkey '^h'    backward-delete-char
 bindkey '^w'    backward-kill-word
-bindkey '^f'    history-incremental-search-forward
-bindkey '^r'    history-incremental-search-backward
-bindkey '^[[3~' delete-char
-bindkey '^[[H'  beginning-of-line
-bindkey '^[[1~' beginning-of-line
-bindkey '^[[F'  end-of-line
-bindkey '^[[4~' end-of-line
 ###############################################################################
 
 
