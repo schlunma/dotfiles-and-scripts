@@ -213,6 +213,14 @@ fi
 
 
 ###############################################################################
+# Set up fzf key bindings and fuzzy completion
+###############################################################################
+source <(fzf --zsh)
+###############################################################################
+
+
+
+###############################################################################
 # Lines added by zinit's installer
 ###############################################################################
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
@@ -243,6 +251,7 @@ zinit light zdharma-continuum/zinit-annex-rust
 # Load plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-autosuggestions
+zinit load atuinsh/atuin
 
 # Plugin settings
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
