@@ -123,7 +123,13 @@ RPROMPT="$GIT_INFO"
 ###############################################################################
 # Keybindings (vim-like configuration)
 ###############################################################################
-bindkey '^w'    backward-kill-word
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^w' backward-kill-word
+bindkey '^f' history-incremental-search-forward
+
+# The following might be overwritten by atuin (if present)
+bindkey '^r' history-incremental-search-backward
 ###############################################################################
 
 
