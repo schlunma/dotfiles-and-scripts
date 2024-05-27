@@ -22,9 +22,9 @@ if (( ${+SSH_CLIENT} )) || (( ${+SSH_TTY} )); then
 else
     export SSH_SESSION=0
 fi
-gpg-agent &>/dev/null
+gpg-agent &> /dev/null
 if [[ $? -ne 0 ]]; then
-    gpg-agent --daemon --use-standard-socket &>/dev/null
+    gpg-agent --daemon --use-standard-socket &> /dev/null
 fi
 ###############################################################################
 
@@ -96,7 +96,7 @@ $RED%a%f$WHITE]%f"
 zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
 zstyle ':vcs_info:*' enable git
 +vi-git-untracked() {
-    if [[ $("git" rev-parse --is-inside-work-tree 2>/dev/null) == \
+    if [[ $("git" rev-parse --is-inside-work-tree 2> /dev/null) == \
         'true' ]] && [[ $("git" ls-files --other --directory \
         --exclude-standard | sed q | wc -l | tr -d ' ') == 1 ]] ; then
             hook_com[unstaged]+="$RED??%f"
@@ -139,7 +139,7 @@ alias la='ls -A'
 alias l='ls -CF'
 
 # SSH
-if command -v 'checkssh' &>/dev/null; then
+if command -v 'checkssh' &> /dev/null; then
     alias git='checkssh; git'
     alias rsync='checkssh; rsync -aP'
     alias ssh='checkssh 1; ssh'
@@ -215,7 +215,9 @@ fi
 ###############################################################################
 # Set up fzf key bindings and fuzzy completion
 ###############################################################################
-source <(fzf --zsh)
+if command -v 'fzf' &> /dev/null; then
+    source <(fzf --zsh)
+fi
 ###############################################################################
 
 
