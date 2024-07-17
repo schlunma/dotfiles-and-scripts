@@ -36,13 +36,13 @@ fi
 HISTFILE=~/.zsh_history
 HISTSIZE=999999999
 SAVEHIST=999999999
-setopt append_history
 setopt autocd
 setopt beep
+setopt extended_history
 setopt hist_ignore_all_dups
+setopt inc_append_history
 setopt nomatch
 setopt notify
-setopt share_history
 unsetopt extendedglob
 bindkey -v
 ###############################################################################
