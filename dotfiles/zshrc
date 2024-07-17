@@ -121,15 +121,10 @@ RPROMPT="$GIT_INFO"
 
 
 ###############################################################################
-# Keybindings (vim-like configuration)
+# Keybinds
 ###############################################################################
-bindkey '^P' up-history
-bindkey '^N' down-history
 bindkey '^w' backward-kill-word
 bindkey '^f' history-incremental-search-forward
-
-# The following might be overwritten by atuin (if present)
-bindkey '^r' history-incremental-search-backward
 ###############################################################################
 
 
@@ -256,10 +251,13 @@ zinit light zdharma-continuum/zinit-annex-rust
 ###############################################################################
 # Plugins
 ###############################################################################
+# Set atuin keybinds later
+export ATUIN_NOBIND="true"
+
 # Load plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-autosuggestions
-zinit load atuinsh/atuin
+zinit light atuinsh/atuin
 
 # Plugin settings
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
@@ -291,4 +289,11 @@ ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=cyan"
 ZSH_HIGHLIGHT_STYLES[rc-quote]="fg=cyan"
 ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
 bindkey '^ ' autosuggest-accept
+zle -al | grep "atuin" &> /dev/null
+if [ $? -eq 0 ]; then
+    bindkey '^r' atuin-search
+    bindkey '^p' atuin-up-search
+else
+    bindkey '^r' history-incremental-search-backward
+fi
 ###############################################################################
