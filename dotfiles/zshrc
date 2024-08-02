@@ -15,17 +15,36 @@
 
 
 ###############################################################################
-# Check if session is SSH session and start gpg-agent if necessary
+# SSH/GPG configuration
 ###############################################################################
+# SSH status
 if (( ${+SSH_CLIENT} )) || (( ${+SSH_TTY} )); then
     export SSH_SESSION=1
 else
     export SSH_SESSION=0
 fi
+
+# Start gpg-agent if necessary
 gpg-agent &> /dev/null
 if [[ $? -ne 0 ]]; then
     gpg-agent --daemon --use-standard-socket &> /dev/null
 fi
+
+# GPG keys
+export GPG_TTY=$(tty)
+###############################################################################
+
+
+
+###############################################################################
+# Adapt language settings and PATH
+###############################################################################
+# UTF-8 support
+UTF8='.UTF-8'
+[[ $LANG =~ $UTF8 ]] || export LANG="$LANG$UTF8"
+
+# Make sure that $HOME/bin is in $PATH
+[[ ":$PATH:" =~ ":$HOME/bin:" ]] || export PATH="$HOME/bin:$PATH"
 ###############################################################################
 
 
@@ -138,6 +157,7 @@ alias ls='ls --color=auto'
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
+alias mamba='micromamba'
 
 # SSH
 if command -v 'checkssh' &> /dev/null; then
@@ -164,51 +184,25 @@ alias sq='squeue -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l \
 
 
 ###############################################################################
-# Exports
-###############################################################################
-# UTF-8 support
-UTF8='.UTF-8'
-[[ $LANG =~ $UTF8 ]] || export LANG="$LANG$UTF8"
-
-# GPG keys
-export GPG_TTY=$(tty)
-
-# Make sure that $HOME/bin is in $PATH
-[[ ":$PATH:" =~ ":$HOME/bin:" ]] || export PATH="$HOME/bin:$PATH"
-###############################################################################
-
-
-
-###############################################################################
 # Lines configured by mamba init (slightly altered)
 ###############################################################################
-# Find miniforge installation
+# Find micromamba installation
+export MAMBA_EXE="$HOME/.local/bin/micromamba"
 if (( ${+WORK_DIR} )); then
-    export MINIFORGE="$WORK_DIR/miniforge3"
+    export MAMBA_ROOT_PREFIX="$WORK_DIR/micromamba"
 else
-    export MINIFORGE="$HOME/miniforge3"
+    export MAMBA_ROOT_PREFIX="$HOME/micromamba"
 fi
 
-# Only run conda init script if this file is not initialized from a tmux
-# session (this is necessary to keep an activated environment active when
-# starting tmux)
-if (( ! ${+TMUX} )); then
-    __conda_setup=`$MINIFORGE/bin/conda shell.zsh hook 2> /dev/null`
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "$MINIFORGE/etc/profile.d/conda.sh" ]; then
-            . "$MINIFORGE/etc/profile.d/conda.sh"
-        else
-            [[ ":$PATH:" =~ ":$MINIFORGE/bin:" ]] || \
-                export PATH="$MINIFORGE/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-    if [ -f "$MINIFORGE/etc/profile.d/mamba.sh" ]; then
-        . "$MINIFORGE/etc/profile.d/mamba.sh"
-    fi
+# Run initialization script
+__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix \
+    "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__mamba_setup"
+else
+    alias micromamba="$MAMBA_EXE"  # fallback on help from mamba activate
 fi
+unset __mamba_setup
 ###############################################################################
 
 
