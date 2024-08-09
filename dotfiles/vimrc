@@ -57,6 +57,7 @@ set foldlevel=2                         " Start with no folds
 set background=dark                     " Use dark background
 set omnifunc=syntaxcomplete#Complete    " Omnicomplete
 set completeopt=longest,menuone         " Make completion menu more convenient
+set timeoutlen=400                      " Timeout for multi-key sequences
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
