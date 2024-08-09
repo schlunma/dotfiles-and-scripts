@@ -80,7 +80,7 @@ compinit
 ###############################################################################
 # Basic settings
 ###############################################################################
-KEYTIMEOUT=1                            # timeout in ZLE mode
+KEYTIMEOUT=1  # timeout to detect multi-key sequences
 zstyle ':completion:*' menu select
 ###############################################################################
 
@@ -121,10 +121,10 @@ zstyle ':vcs_info:*' enable git
     fi
 }
 GIT_INFO='${vcs_info_msg_0_}'
-function preexec () {
+function preexec() {
     TIME=$(($(date +%s%N) / 1000000))
 }
-function precmd () {
+function precmd() {
     vcs_info
     if [ $TIME ]; then
         NOW=$(($(date +%s%N) / 1000000))
@@ -134,15 +134,6 @@ function precmd () {
     fi
 }
 RPROMPT="$GIT_INFO"
-###############################################################################
-
-
-
-###############################################################################
-# Keybinds
-###############################################################################
-bindkey '^w' backward-kill-word
-bindkey '^f' history-incremental-search-forward
 ###############################################################################
 
 
@@ -207,16 +198,6 @@ unset __mamba_setup
 
 
 ###############################################################################
-# Set up fzf key bindings and fuzzy completion
-###############################################################################
-if command -v 'fzf' &> /dev/null; then
-    source <(fzf --zsh)
-fi
-###############################################################################
-
-
-
-###############################################################################
 # Lines added by zinit's installer
 ###############################################################################
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
@@ -247,14 +228,14 @@ zinit light zdharma-continuum/zinit-annex-rust
 ###############################################################################
 # Plugins
 ###############################################################################
-# Set atuin keybinds later
+# Set up atuin keybinds later
 export ATUIN_NOBIND="true"
 
 # Load plugins
 zinit ice depth=1
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-autosuggestions
-zinit light softmoth/zsh-vim-mode
+zinit light jeffreytse/zsh-vi-mode
 zinit light atuinsh/atuin
 
 # Plugin settings
@@ -286,12 +267,51 @@ ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]="fg=cyan"
 ZSH_HIGHLIGHT_STYLES[back-dollar-quoted-argument]="fg=cyan"
 ZSH_HIGHLIGHT_STYLES[rc-quote]="fg=cyan"
 ZSH_HIGHLIGHT_STYLES[assign]="fg=cyan,bold"
-bindkey '^ ' autosuggest-accept
-zle -al | grep "atuin" &> /dev/null
-if [[ $? -eq 0 ]]; then
-    bindkey '^r' atuin-search
-    bindkey '^p' atuin-up-search
-else
-    bindkey '^r' history-incremental-search-backward
-fi
+
+ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+###############################################################################
+
+
+
+###############################################################################
+# Commands executed after initialization of zsh-vi-mode
+###############################################################################
+# Note: the order here is important to ensure that keybinds are correctly set
+# depending on the availability of fzf and atuin on the machine
+
+# Normal mode keybinds
+function normal_mode_keybinds() {
+    zvm_bindkey vicmd '^r' redo
+}
+
+zvm_after_lazy_keybindings_commands+=(normal_mode_keybinds)
+
+# Custom keybinds for insert mode
+function custom_keybinds() {
+    zvm_bindkey viins '^ ' autosuggest-accept
+    zvm_bindkey viins '^f' history-incremental-search-forward
+    zvm_bindkey viins '^r' history-incremental-search-backward
+    zvm_bindkey viins 'jk' zvm_exit_insert_mode
+    zvm_bindkey viins 'kj' zvm_exit_insert_mode
+}
+
+# Set up fzf
+function init_fzf() {
+    if command -v 'fzf' &> /dev/null; then
+        source <(fzf --zsh)
+    fi
+}
+
+# Atuin keybinds for insert mode
+function atuin_keybinds() {
+    zle -al | grep "atuin" &> /dev/null
+    if [[ $? -eq 0 ]]; then
+        zvm_bindkey viins '^r' atuin-search
+        zvm_bindkey viins '^p' atuin-up-search
+    fi
+}
+
+zvm_after_init_commands+=(custom_keybinds)
+zvm_after_init_commands+=(init_fzf)
+zvm_after_init_commands+=(atuin_keybinds)
 ###############################################################################
