@@ -139,6 +139,30 @@ RPROMPT="$GIT_INFO"
 
 
 ###############################################################################
+# Lines configured by mamba init (slightly altered)
+###############################################################################
+# Find micromamba installation
+export MAMBA_EXE="$HOME/.local/bin/micromamba"
+if (( ${+WORK_DIR} )); then
+    export MAMBA_ROOT_PREFIX="$WORK_DIR/micromamba"
+else
+    export MAMBA_ROOT_PREFIX="$HOME/micromamba"
+fi
+
+# Run initialization script
+__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix \
+    "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+if [[ $? -eq 0 ]]; then
+    eval "$__mamba_setup"
+else
+    alias micromamba="$MAMBA_EXE"  # fallback on help from mamba activate
+fi
+unset __mamba_setup
+###############################################################################
+
+
+
+###############################################################################
 # Aliases
 ###############################################################################
 # Shell
@@ -167,32 +191,7 @@ alias scompute="salloc --x11 --partition=compute --nodes=1 --mem=0 \
 --time=08:00:00"
 alias sinter="salloc --x11 --partition=interactive --nodes=1 --mem=32G \
 --time=12:00:00"
-alias sq='squeue -u $USER -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l \
-%.6D  %R"'
-###############################################################################
-
-
-
-###############################################################################
-# Lines configured by mamba init (slightly altered)
-###############################################################################
-# Find micromamba installation
-export MAMBA_EXE="$HOME/.local/bin/micromamba"
-if (( ${+WORK_DIR} )); then
-    export MAMBA_ROOT_PREFIX="$WORK_DIR/micromamba"
-else
-    export MAMBA_ROOT_PREFIX="$HOME/micromamba"
-fi
-
-# Run initialization script
-__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix \
-    "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
-if [[ $? -eq 0 ]]; then
-    eval "$__mamba_setup"
-else
-    alias micromamba="$MAMBA_EXE"  # fallback on help from mamba activate
-fi
-unset __mamba_setup
+alias sq='squeue --me -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l %.6D %R"'
 ###############################################################################
 
 
