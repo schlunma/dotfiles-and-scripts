@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Easy SSH synchronization
-# Copyright (c) 2024 Manuel Schlund <schlunma@gmail.com>
+# Copyright (c) 2025 Manuel Schlund <schlunma@gmail.com>
 # Licensed under the GNU General Public License v3.0 (or later).
 
 """Easy synchronization between different hosts using SSH.
@@ -41,8 +41,8 @@ The configuration file is given in YAML format, e.g.::
 All top-level entries (except for `ALIASES`) are hostnames of the different
 machines. If no `_PATH` option is given, the particular hostname has to be
 defined in the SSH configuration file (~/.ssh/config). The paths of all files
-or directories have to be given relative to the home directory of the
-particular machine or, if given, relative to the `_PATH` option.
+or directories have to be given absolute, relative (to the home directory of
+the particular machine) or, if given, relative to the `_PATH` option.
 
 The `ALIASES` section offers the possibility to assign aliases for the
 different hosts.
@@ -215,13 +215,18 @@ class Sync():
             target_host_path = self._expanduser(
                 self.config[target_host][self._PATH]
             )
+        elif self.config[target_host][element].startswith('/'):
+            target_host_path = f'{target_host}:'
         else:
             target_host_path = f'{target_host}:./'
 
         # Get elements
-        this_element = self._expanduser(
-            f'~/{self.config[self.this_host][element]}'
-        )
+        if self.config[self.this_host][element].startswith('/'):
+            this_element = self.config[self.this_host][element]
+        else:
+            this_element = self._expanduser(
+                f'~/{self.config[self.this_host][element]}'
+            )
         target_element = target_host_path + self.config[target_host][element]
 
         # Get synchronization command
