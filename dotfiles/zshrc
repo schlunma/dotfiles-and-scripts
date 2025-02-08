@@ -40,7 +40,7 @@ export GPG_TTY=$(tty)
 # Adapt language settings and PATH
 ###############################################################################
 # UTF-8 support
-UTF8='.UTF-8'
+UTF8=".UTF-8"
 [[ $LANG =~ $UTF8 ]] || export LANG="$LANG$UTF8"
 
 # Make sure that $HOME/bin is in $PATH
@@ -81,7 +81,7 @@ compinit
 # Basic settings
 ###############################################################################
 KEYTIMEOUT=1  # timeout to detect multi-key sequences
-zstyle ':completion:*' menu select
+zstyle ":completion:*" menu select
 ###############################################################################
 
 
@@ -90,13 +90,13 @@ zstyle ':completion:*' menu select
 # Prompt
 ###############################################################################
 # Colors
-CYAN='%F{blue}%B'
-GREEN='%F{green}%B'
-RED='%F{red}%B'
-ORANGE='%F{white}%B'
-WHITE='%F{fg}%B'
-GRAY='%F{fg}'
-RES='%f%b'
+CYAN="%F{blue}%B"
+GREEN="%F{green}%B"
+RED="%F{red}%B"
+ORANGE="%F{white}%B"
+WHITE="%F{fg}%B"
+GRAY="%F{fg}"
+RES="%f%b"
 autoload -Uz colors && colors
 PROMPT="$WHITE%*$RES $RED%n$RES$GRAY@$RES$CYAN%m$RES \
 $ORANGE%~ "$'\n'"       $ $RES"
@@ -104,19 +104,19 @@ $ORANGE%~ "$'\n'"       $ $RES"
 # Git and execution time
 setopt prompt_subst
 autoload -Uz vcs_info
-zstyle ':vcs_info:*' stagedstr 'M'
-zstyle ':vcs_info:*' unstagedstr 'M'
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' formats "$WHITE [%f$GREEN%b%f$WHITE]%f \
+zstyle ":vcs_info:*" stagedstr "M"
+zstyle ":vcs_info:*" unstagedstr "M"
+zstyle ":vcs_info:*" check-for-changes true
+zstyle ":vcs_info:*" formats "$WHITE [%f$GREEN%b%f$WHITE]%f \
 $GREEN%c%f$ORANGE%u%f"
-zstyle ':vcs_info:*' actionformats "$WHITE [%f$GREEN%b%f$WHITE|%f\
+zstyle ":vcs_info:*" actionformats "$WHITE [%f$GREEN%b%f$WHITE|%f\
 $RED%a%f$WHITE]%f"
-zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
-zstyle ':vcs_info:*' enable git
+zstyle ":vcs_info:git*+set-message:*" hooks git-untracked
+zstyle ":vcs_info:*" enable git
 +vi-git-untracked() {
     if [[ $("git" rev-parse --is-inside-work-tree 2> /dev/null) == \
-        'true' ]] && [[ $("git" ls-files --other --directory \
-        --exclude-standard | sed q | wc -l | tr -d ' ') == 1 ]] ; then
+        "true" ]] && [[ $("git" ls-files --other --directory \
+        --exclude-standard | sed q | wc -l | tr -d " ") == 1 ]] ; then
             hook_com[unstaged]+="$RED??%f"
     fi
 }
@@ -166,32 +166,34 @@ unset __mamba_setup
 # Aliases
 ###############################################################################
 # Shell
-alias cd..='cd ..'
-alias ls='ls --color=auto'
-alias ll='ls -l'
-alias la='ls -A'
-alias l='ls -CF'
-alias mamba='micromamba'
+alias cd..="cd .."
+alias ls="ls --color=auto"
+alias ll="ls -l"
+alias la="ls -A"
+alias l="ls -CF"
+alias mamba="micromamba"
 
 # SSH
-if command -v 'checkssh' &> /dev/null; then
-    alias git='checkssh; git'
-    alias rsync='checkssh; rsync -aP'
-    alias ssh='checkssh 1; ssh'
+if command -v "checkssh" &> /dev/null; then
+    alias git="checkssh; git"
+    alias rsync="checkssh; rsync -aP"
+    alias ssh="checkssh 1; ssh"
 else
-    alias rsync='rsync -aP'
+    alias rsync="rsync -aP"
 fi
 
 # Git
-alias diffall='git diff --name-only main | xargs echo'
-alias diffpy='git diff --name-only main | egrep "\.py$" | xargs echo'
+alias diffall="git diff --name-only main | xargs echo"
+alias diffpy="git diff --name-only main | egrep '\.py$' | xargs echo"
+alias gitclean='git fetch --prune && git branch -vv | \
+    awk "/: gone]/{print \$1}" | xargs -I {} git branch -D {}'
 
 # SLURM
 alias scompute="salloc --x11 --partition=compute --nodes=1 --mem=0 \
---time=08:00:00"
+    --time=08:00:00"
 alias sinter="salloc --x11 --partition=interactive --nodes=1 --mem=32G \
---time=12:00:00"
-alias sq='squeue --me -o "%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l %.6D %R"'
+    --time=12:00:00"
+alias sq="squeue --me -o '%.18i %.17j %.10P %.8u %.8a %.8T %.8M %.12l %.6D %R'"
 ###############################################################################
 
 
@@ -280,23 +282,23 @@ ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
 
 # Normal mode keybinds
 function normal_mode_keybinds() {
-    zvm_bindkey vicmd '^r' redo
+    zvm_bindkey vicmd "^r" redo
 }
 
 zvm_after_lazy_keybindings_commands+=(normal_mode_keybinds)
 
 # Custom keybinds for insert mode
 function custom_keybinds() {
-    zvm_bindkey viins '^ ' autosuggest-accept
-    zvm_bindkey viins '^f' history-incremental-search-forward
-    zvm_bindkey viins '^r' history-incremental-search-backward
-    zvm_bindkey viins 'jk' zvm_exit_insert_mode
-    zvm_bindkey viins 'kj' zvm_exit_insert_mode
+    zvm_bindkey viins "^ " autosuggest-accept
+    zvm_bindkey viins "^f" history-incremental-search-forward
+    zvm_bindkey viins "^r" history-incremental-search-backward
+    zvm_bindkey viins "jk" zvm_exit_insert_mode
+    zvm_bindkey viins "kj" zvm_exit_insert_mode
 }
 
 # Set up fzf
 function init_fzf() {
-    if command -v 'fzf' &> /dev/null; then
+    if command -v "fzf" &> /dev/null; then
         source <(fzf --zsh)
     fi
 }
@@ -305,8 +307,8 @@ function init_fzf() {
 function atuin_keybinds() {
     zle -al | grep "atuin" &> /dev/null
     if [[ $? -eq 0 ]]; then
-        zvm_bindkey viins '^r' atuin-search
-        zvm_bindkey viins '^p' atuin-up-search
+        zvm_bindkey viins "^r" atuin-search
+        zvm_bindkey viins "^p" atuin-up-search
     fi
 }
 
