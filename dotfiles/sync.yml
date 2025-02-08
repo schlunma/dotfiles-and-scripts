@@ -1,0 +1,35 @@
+###############################################################################
+# Configuration file for sync.py
+#
+# Copyright (c) 2025 Manuel Schlund <schlunma@gmail.com>
+# Licensed under the GNU General Public License v3.0 (or later).
+###############################################################################
+#
+# All top-level entries (except for `ALIASES`) are hostnames of the different
+# machines. If no `_PATH` option is given, the particular hostname has to be
+# defined in the SSH configuration file (~/.ssh/config). The paths of all files
+# or directories have to be given absolute, relative (to the home directory of
+# the particular machine) or, if given, relative to the `_PATH` option.
+#
+# The `ALIASES` section offers the possibility to assign aliases for the
+# different hosts.
+#
+###############################################################################
+
+
+
+###############################################################################
+ALIASES:
+  alias_for_host1: host1
+
+host1:
+  file1: path/to/file1
+  file2: path/to/file2
+
+host2:
+  _PATH: ~/path/to/somewhere/
+  file2: another/path/to/file2
+
+host3:
+  file1: yet/another/path/to/file1
+###############################################################################
