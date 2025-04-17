@@ -185,7 +185,7 @@ fi
 # Git
 alias diffall="git diff --name-only main | xargs echo"
 alias diffpy="git diff --name-only main | egrep '\.py$' | xargs echo"
-alias gitclean='git fetch --prune && git branch -vv | \
+alias gitclean='git fetch --prune --prune-tags && git branch -vv | \
     awk "/: gone]/{print \$1}" | xargs -I {} git branch -D {}'
 
 # SLURM
