@@ -193,8 +193,8 @@ alias scompute="salloc --x11 --partition=compute --nodes=1 --mem=0 \
     --time=08:00:00"
 alias sinter="salloc --x11 --partition=interactive --nodes=1 --mem=32G \
     --time=12:00:00"
-alias sq="squeue --me -o '%.18i %.25j %.10P %.8u %.8a %.8T %.8M %.12l %.6D \
-    %.20R %.10S'"
+alias sq="squeue --me -o '%.10i %.30j %.15P %.10u %.10a %.10T %.10M %.15l \
+    %.10D %.30R %.20S'"
 ###############################################################################
 
 
