@@ -186,6 +186,8 @@ inoremap <expr> <C-N> pumvisible() ? '<C-N>' :
   \ '<C-N><C-R>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 inoremap <expr> <C-@> pumvisible() ? '<C-N>' :
   \ '<C-X><C-O><C-N><C-P><C-R>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+inoremap <expr> <TAB> pumvisible() ? '<CR>' : '<TAB>'
+inoremap <expr> <CR> pumvisible() ? '<Right><CR>' : '<CR>'
 
 " Stop search highlighting
 nnoremap <silent> , :nohlsearch<Bar>:echo<CR>
