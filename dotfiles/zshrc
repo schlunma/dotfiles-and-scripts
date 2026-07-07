@@ -43,8 +43,10 @@ export GPG_TTY=$(tty)
 UTF8=".UTF-8"
 [[ $LANG =~ $UTF8 ]] || export LANG="$LANG$UTF8"
 
-# Make sure that $HOME/bin is in $PATH
+# Expand $PATH
 [[ ":$PATH:" =~ ":$HOME/bin:" ]] || export PATH="$HOME/bin:$PATH"
+[[ ":$PATH:" =~ ":$HOME/.local/bin:" ]] || export PATH="$HOME/.local/bin:$PATH"
+[[ ":$PATH:" =~ ":$HOME/.pixi/bin:" ]] || export PATH="$HOME/.pixi/bin:$PATH"
 ###############################################################################
 
 
@@ -219,6 +221,16 @@ zinit light zdharma-continuum/zinit-annex-as-monitor
 zinit light zdharma-continuum/zinit-annex-bin-gem-node
 zinit light zdharma-continuum/zinit-annex-patch-dl
 zinit light zdharma-continuum/zinit-annex-rust
+###############################################################################
+
+
+
+###############################################################################
+# Applications
+###############################################################################
+if command -v "pixi" &> /dev/null; then
+    eval "$(pixi completion --shell zsh)"
+fi
 ###############################################################################
 
 
